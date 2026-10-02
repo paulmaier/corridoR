@@ -19,8 +19,10 @@ Simple corridor bandwidths: a fixed distance on either side of each least
 cost path.
 }
 \examples{
+\donttest{
 ex <- corridor_example()
 tr <- make_transition(ex$resistance)
 p <- least_cost_paths(tr, ex$sites, pairs = data.frame(from = "M01", to = "M12"))
 b <- path_buffers(p, c(100, 500))
+}
 }

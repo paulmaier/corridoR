@@ -37,9 +37,11 @@ An \code{sf} object of lines with columns \code{from}, \code{to}, \code{euclidea
 Least cost paths between sites
 }
 \examples{
+\donttest{
 ex <- corridor_example()
 tr <- make_transition(ex$resistance)
 paths <- least_cost_paths(tr, ex$sites, pairs = data.frame(from = "M01", to = "M12"),
                           dem = ex$dem)
 paths
+}
 }

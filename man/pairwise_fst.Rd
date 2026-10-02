@@ -24,7 +24,7 @@ Pairwise FST between populations
 }
 \examples{
 ex <- corridor_example()
-fst <- pairwise_fst(read_genotypes(ex$files$structure))
+fst <- pairwise_fst(read_genotypes(ex$files$small))
 round(fst[1:4, 1:4], 3)
 }
 \references{

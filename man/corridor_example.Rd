@@ -28,7 +28,8 @@ years), for \code{\link[=lineage_cross]{lineage_cross()}}.}
 compute and are cached for the rest of the session.}
 \item{\code{files}}{Paths to the genotypes (about 1,300 SNPs, 8 individuals per meadow)
 in STRUCTURE (\code{structure}), GENEPOP (\code{genepop}) and VCF (\code{vcf}) format,
-and the VCF population map (\code{popmap}).}
+the VCF population map (\code{popmap}), and a small GENEPOP sample of six
+meadows and 100 SNPs (\code{small}) for quick tests.}
 }
 }
 \description{

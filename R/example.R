@@ -29,7 +29,8 @@
 #'   compute and are cached for the rest of the session.}
 #' \item{`files`}{Paths to the genotypes (about 1,300 SNPs, 8 individuals per meadow)
 #'   in STRUCTURE (`structure`), GENEPOP (`genepop`) and VCF (`vcf`) format,
-#'   and the VCF population map (`popmap`).}
+#'   the VCF population map (`popmap`), and a small GENEPOP sample of six
+#'   meadows and 100 SNPs (`small`) for quick tests.}
 #' }
 #' @param acc Also compute the accumulated cost surfaces.
 #' @examples
@@ -46,7 +47,8 @@ corridor_example <- function(acc = FALSE) {
        env = terra::rast(f("env_present.tif")), env_future = terra::rast(f("env_future.tif")),
        sites = sf::st_read(f("sites.gpkg"), quiet = TRUE),
        files = list(structure = f("example.str"), genepop = f("example.gen"),
-                    vcf = f("example.vcf"), popmap = f("popmap.txt")))
+                    vcf = f("example.vcf"), popmap = f("popmap.txt"),
+                    small = f("example_small.gen")))
   if (acc) {
     if (is.null(.cache$acc)) {
       tr <- make_transition(out$resistance, barrier = 1e6)

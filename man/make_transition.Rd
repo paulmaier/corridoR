@@ -26,6 +26,8 @@ above \code{barrier} (for example ridgelines scored as impassable) and \code{NA}
 cannot be crossed.
 }
 \examples{
+\donttest{
 ex <- corridor_example()
 tr <- make_transition(ex$resistance)
+}
 }

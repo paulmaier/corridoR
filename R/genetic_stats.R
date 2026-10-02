@@ -13,7 +13,7 @@
 #'   Research 23:1514-1521.
 #' @examples
 #' ex <- corridor_example()
-#' fst <- pairwise_fst(read_genotypes(ex$files$structure))
+#' fst <- pairwise_fst(read_genotypes(ex$files$small))
 #' round(fst[1:4, 1:4], 3)
 #' @export
 pairwise_fst <- function(x, method = c("hudson", "nei")) {
@@ -74,7 +74,7 @@ pairwise_fst <- function(x, method = c("hudson", "nei")) {
 #'   range shifts via asymmetrical migration corridors. Heredity 129:257-272.
 #' @examples
 #' ex <- corridor_example()
-#' dg <- directional_gst(read_genotypes(ex$files$structure))
+#' dg <- directional_gst(read_genotypes(ex$files$small))
 #' round(dg$dM[1:4, 1:4], 3)
 #' @export
 directional_gst <- function(x) {

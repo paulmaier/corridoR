@@ -13,8 +13,10 @@
 #' @param directions 4, 8 or 16 neighbors.
 #' @return A `TransitionLayer`.
 #' @examples
+#' \donttest{
 #' ex <- corridor_example()
 #' tr <- make_transition(ex$resistance)
+#' }
 #' @export
 make_transition <- function(resistance, barrier = NULL, directions = 8) {
   r <- if (inherits(resistance, "SpatRaster")) raster::raster(resistance) else resistance
@@ -37,11 +39,13 @@ make_transition <- function(resistance, barrier = NULL, directions = 8) {
 #' @return An `sf` object of lines with columns `from`, `to`, `euclidean` and
 #'   `length`.
 #' @examples
+#' \donttest{
 #' ex <- corridor_example()
 #' tr <- make_transition(ex$resistance)
 #' paths <- least_cost_paths(tr, ex$sites, pairs = data.frame(from = "M01", to = "M12"),
 #'                           dem = ex$dem)
 #' paths
+#' }
 #' @export
 least_cost_paths <- function(tr, sites, id = "site", pairs = NULL, dem = NULL, max_length = Inf) {
   xy <- site_xy(sites, id)
@@ -106,11 +110,13 @@ accumulated_cost <- function(tr, sites, id = "site", filename = "") {
 #'   value of `q`.
 #' @references Maier PA et al. (2022) Heredity 129:257-272.
 #' @examples
+#' \donttest{
 #' ex <- corridor_example()
 #' tr <- make_transition(ex$resistance)
 #' acc <- accumulated_cost(tr, ex$sites[ex$sites$site %in% c("M01", "M12"), ])
 #' w <- lcc_weights(acc, "M01", "M12", q = c(0.005, 0.05))
 #' terra::plot(w)
+#' }
 #' @export
 lcc_weights <- function(acc, from, to, q = 0.05) {
   w <- lcc_vec(acc, from, to, q)
@@ -147,10 +153,12 @@ lcc_vec <- function(acc, from, to, q) {
 #' @param width Buffer width(s) in meters.
 #' @return A named list of `sf` polygon layers, one per width.
 #' @examples
+#' \donttest{
 #' ex <- corridor_example()
 #' tr <- make_transition(ex$resistance)
 #' p <- least_cost_paths(tr, ex$sites, pairs = data.frame(from = "M01", to = "M12"))
 #' b <- path_buffers(p, c(100, 500))
+#' }
 #' @export
 path_buffers <- function(paths, width = c(100, 500)) {
   out <- lapply(width, function(w) sf::st_buffer(paths, w))

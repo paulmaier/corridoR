@@ -30,7 +30,7 @@ difference between emigration and immigration gives net migration, dM.
 }
 \examples{
 ex <- corridor_example()
-dg <- directional_gst(read_genotypes(ex$files$structure))
+dg <- directional_gst(read_genotypes(ex$files$small))
 round(dg$dM[1:4, 1:4], 3)
 }
 \references{

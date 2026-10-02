@@ -17,7 +17,7 @@
 #' @return An object of class `popcounts`.
 #' @examples
 #' ex <- corridor_example()
-#' pc <- read_genotypes(ex$files$structure)
+#' pc <- read_genotypes(ex$files$small)
 #' pc
 #' @export
 as_popcounts <- function(x, ...) UseMethod("as_popcounts")

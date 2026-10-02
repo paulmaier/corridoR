@@ -46,6 +46,6 @@ directly, use \code{\link[=read_genotypes]{read_genotypes()}}.
 }
 \examples{
 ex <- corridor_example()
-pc <- read_genotypes(ex$files$structure)
+pc <- read_genotypes(ex$files$small)
 pc
 }

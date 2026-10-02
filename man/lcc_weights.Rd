@@ -25,11 +25,13 @@ weights: 1 on the least cost route and 0 at the edge of the corridor.
 Larger \code{q} gives a broader corridor that takes in more alternative routes.
 }
 \examples{
+\donttest{
 ex <- corridor_example()
 tr <- make_transition(ex$resistance)
 acc <- accumulated_cost(tr, ex$sites[ex$sites$site \%in\% c("M01", "M12"), ])
 w <- lcc_weights(acc, "M01", "M12", q = c(0.005, 0.05))
 terra::plot(w)
+}
 }
 \references{
 Maier PA et al. (2022) Heredity 129:257-272.
