@@ -1,3 +1,5 @@
+# corridoR (development version)
+
 # corridoR 0.1.0
 
 * First release: genotype readers (STRUCTURE, GENEPOP, VCF, GenAlEx, FSTAT,

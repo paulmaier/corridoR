@@ -1,6 +1,6 @@
 Package: corridoR
 Title: Migration Corridors and Genetic Range Shifts from Landscape Genetic Data
-Version: 0.1.0
+Version: 0.1.0.9000
 Authors@R: 
     person("Paul A.", "Maier", , "maierpa@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0003-0851-8827"))
