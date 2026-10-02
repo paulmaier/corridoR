@@ -1,0 +1,46 @@
+url: https://paulmaier.github.io/corridoR/
+template:
+  bootstrap: 5
+  bslib:
+    primary: "#1f8ddb"
+reference:
+- title: Genotypes and genetic distances
+  contents:
+  - read_genotypes
+  - as_popcounts
+  - pairwise_fst
+  - directional_gst
+  - pairwise_table
+- title: Paths and corridors
+  contents:
+  - make_transition
+  - least_cost_paths
+  - accumulated_cost
+  - lcc_weights
+  - path_buffers
+- title: Environmental features
+  contents:
+  - corridor_extract
+  - site_contrast
+  - both_directions
+  - lineage_cross
+- title: Models and forecasts
+  contents:
+  - select_bandwidth
+  - pair_weights
+  - fit_connectivity
+  - predict.corridor_model
+- title: Maps
+  contents:
+  - map_pairwise
+  - shift_arrows
+  - plot_shift
+- title: Example data
+  contents:
+  - corridor_example
+articles:
+- title: Tutorials
+  navbar: ~
+  contents:
+  - articles/tutorial
+  - corridoR

@@ -1,0 +1,345 @@
+---
+title: "Full tutorial: from genotypes to a map of genetic range shifts"
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 9, fig.height = 5.4,
+                      dpi = 110, out.width = "100%", cache = TRUE)
+```
+
+This tutorial walks through the full corridoR workflow, step by step, on a
+simulated mountain range. It follows the six steps of the analysis in
+[Maier et al. (2022, *Heredity*)](https://doi.org/10.1038/s41437-022-00561-x),
+which forecast upslope range shifts in the Yosemite toad. The same steps are
+shown on the real toad data in the
+[Yosemite toad tutorial](https://www.paulmaierresearch.com/software/yosemite-toad-corridors/).
+The full run takes about 15 minutes on a laptop; most of that is step 3.
+
+```{r packages, message = FALSE}
+library(corridoR)
+library(terra)
+library(sf)
+```
+
+## The simulated range
+
+The example range is modeled loosely on the central Sierra Nevada. A long,
+gradual western slope rises from foothills at about 1000 m to a crest above
+3400 m near the eastern edge. East of the crest the ground falls away steeply
+into a rain shadow. Two river canyons cut the western slope, with walls steep
+enough to block movement except near their heads.
+
+Eighty meadows are sampled, 12 snowmelt-dependent toads in each. They belong to
+four lineages: West and South at low elevation on either side of the southern
+canyon, and North and East at high elevation. Lineages at the same elevation
+share their environment but not their history.
+
+```{r study-area, echo = FALSE, out.width = "100%"}
+knitr::include_graphics("../../man/figures/study_area.png")
+```
+
+The simulation behind the genetic data works like this. Toads move most easily
+over gentle, forested ground. Migrants leave a meadow for wetter neighbors, and
+the drier their own meadow, the stronger that pull. Under the warming scenario
+(+4.2 C), snowpack shrinks by a share that falls with elevation, from about 90%
+in the foothills to under 20% at the crest, as in climate projections for
+Yosemite. Low meadows dry out the most, so the push uphill grows most at low
+elevation. The task is to recover that pattern from genotypes and landscape
+data alone.
+
+```{r example}
+ex <- corridor_example(acc = TRUE)
+names(ex)
+ex$sites
+```
+
+`ex$env` and `ex$env_future` hold the environmental layers now and under
+warming. The change in meadow moisture is largest in the foothills and fades
+toward the crest:
+
+```{r climate, fig.height = 3.4}
+plot(c(ex$env$moisture, ex$env_future$moisture - ex$env$moisture),
+     main = c("Meadow moisture index now", "Change under warming"),
+     axes = FALSE, mar = c(1, 1, 2, 5))
+```
+
+## Step 1. Genetic differentiation and the direction of migration
+
+`read_genotypes()` reads STRUCTURE, GENEPOP, VCF, GenAlEx, FSTAT and PLINK
+files and returns allele counts per population. `as_popcounts()` does the same
+for `adegenet` and `vcfR` objects. The example ships the same SNPs in three
+formats:
+
+```{r read}
+pc <- read_genotypes(ex$files$structure)
+pc
+pc_vcf <- read_genotypes(ex$files$vcf, pop = ex$files$popmap)   # VCF needs a population map
+all.equal(pairwise_fst(pc), pairwise_fst(pc_vcf))
+```
+
+Pairwise FST measures differentiation. Directional GST (Sundqvist et al.
+2016, as in `diveRsity::divMigrate`) estimates relative migration in each
+direction from a hypothetical gene pool shared by each pair; the difference,
+emigration minus immigration, is dM. Positive dM means the source sends more
+migrants than it receives.
+
+```{r genetics}
+fst <- pairwise_fst(pc)
+dg <- directional_gst(pc)
+gen <- pairwise_table(fst, dg$dM)
+head(gen)
+```
+
+Ordering the matrices by lineage shows the structure:
+
+```{r matrices, fig.height = 4.4}
+ord <- order(match(ex$sites$lineage, c("North", "East", "West", "South")), ex$sites$elevation)
+ids <- ex$sites$site[ord]
+op <- par(mfrow = c(1, 2), mar = c(1, 1, 2, 4))
+image(t(fst[rev(ids), ids]), axes = FALSE, col = hcl.colors(50, "Inferno"), main = "FST")
+lim <- max(abs(dg$dM), na.rm = TRUE)
+image(t(dg$dM[rev(ids), ids]), axes = FALSE, zlim = c(-lim, lim),
+      col = hcl.colors(50, "Blue-Red 3"), main = "dM (row to column)")
+par(op)
+```
+
+## Step 2. Choosing the most likely migration paths
+
+Corridors start from a resistance surface. In the paper, `ResistanceGA`
+optimized the resistance of slope and of vegetation moisture, and eleven blends
+of the two were compared. The example includes both components, so we can do
+the same. For each blend, `make_transition()` builds the conductance layer
+(ridgelines and canyon walls at resistance 1e6 cannot be crossed), and
+`gdistance::costDistance()` gives the cost of the cheapest route between each
+pair of meadows.
+
+```{r blends}
+xy <- st_coordinates(ex$sites); rownames(xy) <- ex$sites$site
+pairs <- as.data.frame(t(combn(ex$sites$site, 2))); names(pairs) <- c("from", "to")
+pairs <- pairs[sqrt(rowSums((xy[pairs$from, ] - xy[pairs$to, ])^2)) < 15000, ]
+nrow(pairs)
+
+blend <- function(w) {
+  r <- w * ex$resistance_slope + (1 - w) * ex$resistance_cover
+  r[ex$resistance_slope >= 1e6] <- 1e6
+  r
+}
+cost_dist <- function(r) {
+  cd <- as.matrix(gdistance::costDistance(make_transition(r, barrier = 1e6), xy))
+  dimnames(cd) <- list(rownames(xy), rownames(xy))
+  cd[cbind(pairs$from, pairs$to)]
+}
+weights <- seq(0, 1, by = 0.2)
+dists <- sapply(weights, function(w) cost_dist(blend(w)))
+colnames(dists) <- paste0("slope_", weights)
+dists <- cbind(dists, straight_line = sqrt(rowSums((xy[pairs$from, ] - xy[pairs$to, ])^2)))
+```
+
+Each hypothesis is ranked by a mixed model of FST on (scaled) distance, with
+source and destination meadow as random effects:
+
+```{r rank}
+d <- data.frame(pairs, fst = fst[cbind(pairs$from, pairs$to)], scale(dists))
+rank <- sapply(colnames(dists), function(h) {
+  fit <- lme4::lmer(as.formula(paste("fst ~", h, "+ (1 | from) + (1 | to)")), data = d, REML = FALSE)
+  c(logLik = as.numeric(logLik(fit)), AIC = AIC(fit))
+})
+round(t(rank)[order(-rank["logLik", ]), ], 1)
+```
+
+Slope-heavy hypotheses fit best: pure slope ranks first, just ahead of the
+80:20 blend the simulation used, and every path model beats straight-line
+distance. We continue with `ex$resistance`, that 80:20 blend, and draw the
+least cost paths. Path length is measured over the terrain surface.
+
+```{r paths}
+tr <- make_transition(ex$resistance, barrier = 1e6)
+paths <- least_cost_paths(tr, ex$sites, pairs = pairs, dem = ex$dem)
+paths$fst <- fst[cbind(paths$from, paths$to)]
+lc <- c(North = "#ff3939", East = "#0070ff", West = "#000000", South = "#4ce600")
+hill <- shade(terrain(ex$dem * 3, "slope", unit = "radians"), terrain(ex$dem, "aspect", unit = "radians"), 35, 315)
+plot(hill, col = grey(0:100 / 100), legend = FALSE, axes = FALSE, mar = c(0.5, 0.5, 2, 1),
+     main = "Least cost paths, colored by FST")
+pc_col <- hcl.colors(50, "Inferno")[cut(paths$fst, 50)]
+plot(st_geometry(paths), col = pc_col, lwd = 1.2, add = TRUE)
+plot(st_geometry(ex$sites), pch = 21, bg = lc[ex$sites$lineage], col = "white", cex = 1.3, add = TRUE)
+```
+
+## Step 3. Corridors and environmental extraction
+
+A toad does not walk a one-pixel line. A least cost corridor keeps the cheapest
+share `q` of the landscape between two meadows and weights each kept cell from
+1 on the best route to 0 at the corridor edge:
+
+```{r corridor, fig.height = 3.2}
+w <- lcc_weights(ex$acc, "M20", "M60", q = c(0.005, 0.02, 0.05))
+plot(trim(w), col = hcl.colors(50, "Inferno"), axes = FALSE, nc = 3,
+     main = c("q = 0.005", "q = 0.02", "q = 0.05"))
+```
+
+`corridor_extract()` summarizes every environmental layer inside every
+corridor, weighting cells by corridor weight; with path buffers it uses the
+share of each cell inside the buffer. Present and future layers are extracted
+together. We try three bandwidths: a 400 m buffer and two corridor widths.
+
+```{r extract}
+both <- c(ex$env, ex$env_future)
+names(both) <- c(names(ex$env), paste0(names(ex$env), "_f"))
+bands <- list(
+  lcp_400m = corridor_extract(both, pairs, buffers = path_buffers(paths, 400)[[1]], progress = FALSE),
+  lcc_0.01 = corridor_extract(both, pairs, acc = ex$acc, q = 0.01, progress = FALSE),
+  lcc_0.05 = corridor_extract(both, pairs, acc = ex$acc, q = 0.05, progress = FALSE)
+)
+head(bands$lcc_0.05[, 1:6])
+```
+
+## Step 4. A bandwidth for each group of features
+
+Climate may act over a broad swath of landscape, while slope matters right
+along the route. `select_bandwidth()` fits a random forest of FST on each
+feature group under each bandwidth and keeps the one with the lowest
+cross-validated error.
+
+```{r bandwidth}
+groups <- list(climate = c("snowpack", "runoff", "summer_temp"), wetness = "moisture",
+               terrain = "slope", cover = "forest")
+sel <- select_bandwidth(bands, fst[cbind(pairs$from, pairs$to)], groups, num.trees = 300)
+sel
+best <- attr(sel, "best")
+best
+```
+
+## Step 5. Models of FST and dM
+
+The model data hold one row per *directed* pair. Corridor features are the
+same in both directions, so `both_directions()` repeats them. `site_contrast()`
+adds at-site features: the difference between the source and destination
+meadow. Path length and the lineage effect (`lineage_cross()`: time since two
+lineages split, zero within a lineage) go in as they are.
+
+```{r modeldata}
+pick <- function(suffix = "") {
+  out <- pairs
+  for (g in names(groups)) out[groups[[g]]] <- bands[[best[[g]]]][paste0(groups[[g]], suffix)]
+  out$path_length <- paths$length
+  both_directions(out)
+}
+now <- pick(); future <- pick("_f")
+now <- cbind(now, site_contrast(ex$sites, now, env = ex$env)[, -(1:2)])
+future <- cbind(future, site_contrast(ex$sites, now, env = ex$env_future)[, -(1:2)])
+lin <- st_drop_geometry(ex$sites)[, c("site", "lineage")]
+now$LineageCross <- future$LineageCross <- lineage_cross(now$from, now$to, lin, ex$lineage_tmrca)
+y <- gen[match(paste(now$from, now$to), paste(gen$from, gen$to)), ]
+model_groups <- c(groups, list(climate.at = paste0(groups$climate, ".at")))
+```
+
+`fit_connectivity()` runs a PCA within each feature group, tunes a Cubist model
+(rule-based trees with a linear model in every leaf, which extrapolate better
+than random forests), drops collinear features by importance, and refits.
+
+```{r models}
+m_fst <- fit_connectivity(now, y$fst, model_groups, committees = c(1, 10, 50), neighbors = c(0, 5))
+m_dm <- fit_connectivity(now, y$dM, model_groups, committees = c(1, 10, 50), neighbors = c(0, 5))
+m_fst
+m_dm
+```
+
+```{r fit, fig.height = 3.6}
+op <- par(mfrow = c(1, 2), mar = c(4, 4, 2, 1))
+plot(m_fst$observed, m_fst$cv_pred, pch = 16, col = "#2a7f9e44", xlab = "Observed FST",
+     ylab = "Cross-validated prediction", main = "FST"); abline(0, 1)
+plot(m_dm$observed, m_dm$cv_pred, pch = 16, col = "#2a7f9e44", xlab = "Observed dM",
+     ylab = "Cross-validated prediction", main = "dM"); abline(0, 1)
+par(op)
+```
+
+FST is explained mostly by corridor features and path length, dM mostly by
+contrasts between meadows, as in the Yosemite toad:
+
+```{r importance, fig.height = 4}
+op <- par(mfrow = c(1, 2), mar = c(4, 9, 2, 1))
+barplot(rev(head(m_fst$importance, 10)), horiz = TRUE, las = 1, cex.names = 0.75,
+        col = "#2a7f9e", main = "FST", xlab = "Relative importance")
+barplot(rev(head(m_dm$importance, 10)), horiz = TRUE, las = 1, cex.names = 0.75,
+        col = "#c8553d", main = "dM", xlab = "Relative importance")
+par(op)
+```
+
+## Step 6. Forecasting under climate change
+
+`predict()` projects future climate onto the present-day PCA loadings and
+predicts each pair now and under warming.
+
+```{r predict}
+change <- data.frame(from = now$from, to = now$to,
+                     fst = predict(m_fst, future) - predict(m_fst, now),
+                     dM = predict(m_dm, future) - predict(m_dm, now))
+summary(change[, c("fst", "dM")])
+```
+
+`map_pairwise()` spreads each pair's change over its corridor and averages
+overlapping corridors. For dM it also sums direction vectors, each pointing
+from source to destination and weighted by the size of the change, to give a
+net direction in every cell. `plot_shift()` draws the result: blue where change
+is small, red where it is large.
+
+```{r map-dm, fig.height = 6}
+shift <- map_pairwise(data.frame(change[, 1:2], value = change$dM), ex$acc, ex$sites, progress = FALSE)
+plot_shift(shift, dem = ex$dem, sites = ex$sites, col_sites = lc[ex$sites$lineage],
+           main = "Projected shift in net migration", legend_title = "|change in dM|")
+```
+
+The pressure falls on the lowest meadows. On both sides of each canyon, long
+arrows run east, upslope, from the foothills; they shorten through the middle
+elevations and all but vanish near the crest, the refuge. East of the crest
+the arrows turn and climb back west up the escarpment. The canyons stand out as
+gaps that corridors cannot cross. This is the pattern built into the
+simulation, recovered from genotypes and landscape data.
+
+The FST model maps present-day connectivity the same way. Scaling predicted
+FST so that 1 is the best-connected pair, and averaging over corridors, shows
+corridors of high flow and the pinch points between them:
+
+```{r map-conn, fig.height = 6}
+fst_now <- predict(m_fst, now)
+conn <- data.frame(from = now$from, to = now$to, value = (max(fst_now) - fst_now) / diff(range(fst_now)))
+conn_map <- map_pairwise(conn, ex$acc, ex$sites, direction = FALSE, absolute = FALSE, progress = FALSE)
+plot(hill, col = grey(0:100 / 100), legend = FALSE, axes = FALSE, mar = c(0.5, 0.5, 2, 6),
+     main = "Present-day connectivity")
+plot(conn_map$value, col = hcl.colors(50, "Plasma"), alpha = 0.7, add = TRUE,
+     plg = list(title = "Connectivity"))
+plot(st_geometry(ex$sites), pch = 21, bg = lc[ex$sites$lineage], col = "white", cex = 1.3, add = TRUE)
+```
+
+## Using your own data
+
+* **Genotypes:** any format `read_genotypes()` reads, or matrices of FST and
+  dM from other software.
+* **Sites:** an `sf` layer of points or polygons whose ID column matches the
+  population names.
+* **Resistance:** compare a few hypotheses as in step 2, or optimize them with
+  `ResistanceGA`.
+* **Environment:** any stack of rasters, with future versions under the same
+  layer names.
+* **Lineages:** a table of site lineages and a table of divergence times for
+  `lineage_cross()`.
+* **Scale:** `accumulated_cost()` can write to disk, and corridors are built one
+  pair at a time, so large landscapes need time rather than memory.
+
+## Citation
+
+If you use corridoR, please cite both papers:
+
+Maier PA, Vandergast AG, Ostoja SM, Aguilar A, Bohonak AJ (2022) Landscape
+genetics of a sub-alpine toad: climate change predicted to induce upward range
+shifts via asymmetrical migration corridors. *Heredity* 129:257-272.
+<https://doi.org/10.1038/s41437-022-00561-x>
+
+Maier PA (2026) corridoR: Migration corridors and genetic range shifts from
+landscape genetic data. *Journal of Open Source Software* (in review).
+
+## Other references
+
+Sundqvist L, Keenan K, Zackrisson M, Prodohl P, Kleinhans D (2016)
+Directional genetic differentiation and relative migration. *Ecology and
+Evolution* 6:3461-3475.

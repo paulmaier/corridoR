@@ -1,0 +1,11 @@
+.Rproj.user
+.Rhistory
+.RData
+.DS_Store
+docs/
+*.tar.gz
+corridoR.Rcheck/
+Rplots.pdf
+vignettes/articles/*_cache/
+vignettes/articles/*_files/
+vignettes/*.html

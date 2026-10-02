@@ -1,0 +1,49 @@
+Package: corridoR
+Title: Migration Corridors and Genetic Range Shifts from Landscape Genetic Data
+Version: 0.1.0
+Authors@R: 
+    person("Paul A.", "Maier", , "32253629+paulmaier@users.noreply.github.com", role = c("aut", "cre", "cph"),
+           comment = c(ORCID = "0000-0003-0851-8827"))
+Description: Tools for modeling genetic connectivity along migration
+    corridors and forecasting how it shifts under climate change, following
+    Maier et al. (2022) <doi:10.1038/s41437-022-00561-x>. Least cost
+    corridors are built from accumulated cost surfaces and used as weights to
+    summarize raw environmental layers between sites; each group of
+    environmental features can choose its own corridor bandwidth; and
+    pairwise predictions of differentiation and directional migration are
+    mapped back onto the landscape as magnitude and net-direction surfaces.
+    Includes readers for common genotype formats (STRUCTURE, GENEPOP, VCF,
+    GenAlEx, FSTAT, PLINK, and 'adegenet' objects), pairwise FST, and the
+    directional differentiation of Sundqvist et al. (2016)
+    <doi:10.1002/ece3.2096>.
+License: MIT + file LICENSE
+URL: https://github.com/paulmaier/corridoR, https://paulmaier.github.io/corridoR/
+BugReports: https://github.com/paulmaier/corridoR/issues
+Depends: 
+    R (>= 4.1)
+Imports:
+    gdistance,
+    graphics,
+    grDevices,
+    raster,
+    sf,
+    stats,
+    terra,
+    utils
+Suggests:
+    adegenet,
+    caret,
+    Cubist,
+    exactextractr,
+    ggplot2,
+    knitr,
+    lme4,
+    ranger,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    vcfR
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Config/roxygen2/version: 8.1.0

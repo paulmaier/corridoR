@@ -1,0 +1,7 @@
+"lineage1","lineage2","tmrca"
+"North","East",720
+"North","West",720
+"North","South",720
+"East","West",300
+"East","South",420
+"West","South",420
