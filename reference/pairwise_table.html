@@ -69,16 +69,16 @@ pair, the layout used by the modeling functions.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">ex</span> <span class="op">&lt;-</span> <span class="fu"><a href="corridor_example.html">corridor_example</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_genotypes.html">read_genotypes</a></span><span class="op">(</span><span class="va">ex</span><span class="op">$</span><span class="va">files</span><span class="op">$</span><span class="va">structure</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">pairwise_table</span><span class="op">(</span><span class="fu"><a href="pairwise_fst.html">pairwise_fst</a></span><span class="op">(</span><span class="va">pc</span><span class="op">)</span>, <span class="fu"><a href="directional_gst.html">directional_gst</a></span><span class="op">(</span><span class="va">pc</span><span class="op">)</span><span class="op">$</span><span class="va">dM</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   from  to        fst           dM</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  M02 M01 0.16311080  0.038685611</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  M03 M01 0.15357827  0.004226984</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  M04 M01 0.23965549  0.011150260</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  M05 M01 0.08890528 -0.088469572</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  M06 M01 0.22114611  0.013136436</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  M07 M01 0.13162280 -0.027356787</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">fst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span>, <span class="fl">0</span>, <span class="fl">0.15</span>, <span class="fl">0.2</span>, <span class="fl">0.15</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fl">3</span>,</span></span>
+<span class="r-in"><span>              dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">pairwise_table</span><span class="op">(</span><span class="va">fst</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   from to  fst</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    b  a 0.10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    c  a 0.20</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    a  b 0.10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    c  b 0.15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    a  c 0.20</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    b  c 0.15</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

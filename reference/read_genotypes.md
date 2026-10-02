@@ -121,6 +121,7 @@ read_genotypes(ex$files$structure)
 #> <popcounts> 80 populations, 1318 loci (2 alleles per locus)
 #>   individuals per population: 8-8
 #>   populations: M01, M02, M03, M04, M05, M06, M07, M08 ... 
+# \donttest{
 read_genotypes(ex$files$genepop)
 #> <popcounts> 80 populations, 1318 loci (2 alleles per locus)
 #>   individuals per population: 8-8
@@ -129,4 +130,5 @@ read_genotypes(ex$files$vcf, pop = ex$files$popmap)
 #> <popcounts> 80 populations, 1318 loci (2 alleles per locus)
 #>   individuals per population: 8-8
 #>   populations: M01, M02, M03, M04, M05, M06, M07, M08 ... 
+# }
 ```

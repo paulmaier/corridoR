@@ -25,11 +25,10 @@ Useful links:
 
 ## Author
 
-**Maintainer**: Paul A. Maier
-<32253629+paulmaier@users.noreply.github.com>
+**Maintainer**: Paul A. Maier <maierpa@gmail.com>
 ([ORCID](https://orcid.org/0000-0003-0851-8827)) \[copyright holder\]
 
 Authors:
 
-- Paul A. Maier <32253629+paulmaier@users.noreply.github.com>
+- Paul A. Maier <maierpa@gmail.com>
   ([ORCID](https://orcid.org/0000-0003-0851-8827)) \[copyright holder\]

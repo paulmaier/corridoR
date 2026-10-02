@@ -62,6 +62,7 @@ A data.frame with `from`, `to` and one column per layer of `env`.
 ## Examples
 
 ``` r
+# \donttest{
 ex <- corridor_example()
 tr <- make_transition(ex$resistance)
 pr <- data.frame(from = c("M01", "M02"), to = c("M12", "M05"))
@@ -70,4 +71,5 @@ corridor_extract(ex$env, pr, acc = acc, q = 0.05)
 #>   from  to snowpack   runoff moisture summer_temp    slope    forest
 #> 1  M01 M12 702.5725 474.9524 7.035619    22.80098 3.897698 0.9004108
 #> 2  M02 M05 720.7984 483.6719 7.086381    22.82677 3.646871 0.9465355
+# }
 ```
