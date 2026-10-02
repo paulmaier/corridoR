@@ -1,0 +1,38 @@
+# Authors and Citation
+
+## Authors
+
+- **Paul A. Maier**. Author, maintainer, copyright holder.
+  [](https://orcid.org/0000-0003-0851-8827)
+
+## Citation
+
+Source:
+[`inst/CITATION`](https://github.com/paulmaier/corridoR/blob/main/inst/CITATION)
+
+Maier PA, Vandergast AG, Ostoja SM, Aguilar A, Bohonak AJ (2022)
+Landscape genetics of a sub-alpine toad: climate change predicted to
+induce upward range shifts via asymmetrical migration corridors.
+Heredity 129:257-272. https://doi.org/10.1038/s41437-022-00561-x
+
+    @Article{,
+      title = {Landscape genetics of a sub-alpine toad: climate change predicted to induce upward range shifts via asymmetrical migration corridors},
+      author = {Paul A. Maier and Amy G. Vandergast and Steven M. Ostoja and Andres Aguilar and Andrew J. Bohonak},
+      journal = {Heredity},
+      year = {2022},
+      volume = {129},
+      pages = {257--272},
+      doi = {10.1038/s41437-022-00561-x},
+    }
+
+Maier PA (2026) corridoR: Migration corridors and genetic range shifts
+from landscape genetic data. Journal of Open Source Software (in
+review).
+
+    @Article{,
+      title = {corridoR: Migration corridors and genetic range shifts from landscape genetic data},
+      author = {Paul A. Maier},
+      journal = {Journal of Open Source Software},
+      year = {2026},
+      note = {In review. The volume, pages and DOI will be added here on publication.},
+    }
