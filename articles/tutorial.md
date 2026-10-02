@@ -30,7 +30,7 @@ belong to four lineages: West and South at low elevation on either side
 of the southern canyon, and North and East at high elevation. Lineages
 at the same elevation share their environment but not their history.
 
-![](../../reference/figures/study_area.png)
+![](tutorial_files/figure-html/study-area-1.png)
 
 The simulation behind the genetic data works like this. Toads move most
 easily over gentle, forested ground. Migrants leave a meadow for wetter
