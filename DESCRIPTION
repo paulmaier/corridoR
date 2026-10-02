@@ -2,7 +2,7 @@ Package: corridoR
 Title: Migration Corridors and Genetic Range Shifts from Landscape Genetic Data
 Version: 0.1.0
 Authors@R: 
-    person("Paul A.", "Maier", , "32253629+paulmaier@users.noreply.github.com", role = c("aut", "cre", "cph"),
+    person("Paul A.", "Maier", , "maierpa@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0003-0851-8827"))
 Description: Tools for modeling genetic connectivity along migration
     corridors and forecasting how it shifts under climate change, following
