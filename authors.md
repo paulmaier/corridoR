@@ -8,7 +8,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/paulmaier/corridoR/blob/v0.1.0/inst/CITATION)
+[`inst/CITATION`](https://github.com/paulmaier/corridoR/blob/main/inst/CITATION)
 
 Maier PA, Vandergast AG, Ostoja SM, Aguilar A, Bohonak AJ (2022)
 Landscape genetics of a sub-alpine toad: climate change predicted to
