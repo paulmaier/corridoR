@@ -81,8 +81,8 @@ If you use corridoR, **please cite both papers**:
 > range shifts via asymmetrical migration corridors. *Heredity* 129:257-272.
 > <https://doi.org/10.1038/s41437-022-00561-x>
 
-> Maier PA (2026) corridoR: Migration corridors and genetic range shifts from
-> landscape genetic data. *Journal of Open Source Software* (in review).
+> Maier PA (2027) corridoR: Migration corridors and genetic range shifts from
+> landscape genetic data. *Journal of Open Source Software* (in preparation).
 
 The first introduced the method; the second describes the package.
 `citation("corridoR")` prints both.

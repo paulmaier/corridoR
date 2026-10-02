@@ -22,8 +22,8 @@ bibentry(
   title = "corridoR: Migration corridors and genetic range shifts from landscape genetic data",
   author = person("Paul A.", "Maier"),
   journal = "Journal of Open Source Software",
-  year = "2026",
-  note = "In review. The volume, pages and DOI will be added here on publication.",
-  textVersion = paste("Maier PA (2026) corridoR: Migration corridors and genetic range shifts from",
-                      "landscape genetic data. Journal of Open Source Software (in review).")
+  year = "2027",
+  note = "In preparation. The volume, pages and DOI will be added here on publication.",
+  textVersion = paste("Maier PA (2027) corridoR: Migration corridors and genetic range shifts from",
+                      "landscape genetic data. Journal of Open Source Software (in preparation).")
 )
