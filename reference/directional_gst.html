@@ -99,13 +99,13 @@ range shifts via asymmetrical migration corridors. Heredity 129:257-272.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">ex</span> <span class="op">&lt;-</span> <span class="fu"><a href="corridor_example.html">corridor_example</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">dg</span> <span class="op">&lt;-</span> <span class="fu">directional_gst</span><span class="op">(</span><span class="fu"><a href="read_genotypes.html">read_genotypes</a></span><span class="op">(</span><span class="va">ex</span><span class="op">$</span><span class="va">files</span><span class="op">$</span><span class="va">structure</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dg</span> <span class="op">&lt;-</span> <span class="fu">directional_gst</span><span class="op">(</span><span class="fu"><a href="read_genotypes.html">read_genotypes</a></span><span class="op">(</span><span class="va">ex</span><span class="op">$</span><span class="va">files</span><span class="op">$</span><span class="va">small</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">dg</span><span class="op">$</span><span class="va">dM</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, <span class="fl">3</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       M01    M02    M03    M04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> M01 0.000 -0.039 -0.004 -0.011</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> M02 0.039  0.000  0.031  0.001</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> M03 0.004 -0.031  0.000 -0.032</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> M04 0.011 -0.001  0.032  0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        M03_01 M15_01 M28_01 M41_01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> M03_01  0.000 -0.021  0.099 -0.101</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> M15_01  0.021  0.000 -0.258 -0.043</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> M28_01 -0.099  0.258  0.000  0.290</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> M41_01  0.101  0.043 -0.290  0.000</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

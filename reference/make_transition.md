@@ -34,6 +34,8 @@ A `TransitionLayer`.
 ## Examples
 
 ``` r
+# \donttest{
 ex <- corridor_example()
 tr <- make_transition(ex$resistance)
+# }
 ```

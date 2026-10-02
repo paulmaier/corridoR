@@ -40,11 +40,11 @@ interpreting FST: the impact of rare variants. Genome Research
 
 ``` r
 ex <- corridor_example()
-fst <- pairwise_fst(read_genotypes(ex$files$structure))
+fst <- pairwise_fst(read_genotypes(ex$files$small))
 round(fst[1:4, 1:4], 3)
-#>       M01   M02   M03   M04
-#> M01 0.000 0.163 0.154 0.240
-#> M02 0.163 0.000 0.166 0.241
-#> M03 0.154 0.166 0.000 0.235
-#> M04 0.240 0.241 0.235 0.000
+#>        M03_01 M15_01 M28_01 M41_01
+#> M03_01  0.000  0.192  0.125  0.139
+#> M15_01  0.192  0.000  0.154  0.091
+#> M28_01  0.125  0.154  0.000  0.091
+#> M41_01  0.139  0.091  0.091  0.000
 ```

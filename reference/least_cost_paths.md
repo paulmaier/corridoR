@@ -53,6 +53,7 @@ An `sf` object of lines with columns `from`, `to`, `euclidean` and
 ## Examples
 
 ``` r
+# \donttest{
 ex <- corridor_example()
 tr <- make_transition(ex$resistance)
 paths <- least_cost_paths(tr, ex$sites, pairs = data.frame(from = "M01", to = "M12"),
@@ -65,4 +66,5 @@ paths
 #> Projected CRS: +proj=tmerc +lat_0=0 +lon_0=0 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +units=m +no_defs
 #>   from  to euclidean                       geometry   length
 #> 1  M01 M12   19636.7 LINESTRING (3500 19500, 370... 57765.03
+# }
 ```

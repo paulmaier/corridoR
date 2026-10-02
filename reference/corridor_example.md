@@ -63,7 +63,8 @@ A list with
 
   Paths to the genotypes (about 1,300 SNPs, 8 individuals per meadow) in
   STRUCTURE (`structure`), GENEPOP (`genepop`) and VCF (`vcf`) format,
-  and the VCF population map (`popmap`).
+  the VCF population map (`popmap`), and a small GENEPOP sample of six
+  meadows and 100 SNPs (`small`) for quick tests.
 
 ## Examples
 

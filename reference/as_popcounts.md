@@ -58,9 +58,9 @@ file directly, use
 
 ``` r
 ex <- corridor_example()
-pc <- read_genotypes(ex$files$structure)
+pc <- read_genotypes(ex$files$small)
 pc
-#> <popcounts> 80 populations, 1318 loci (2 alleles per locus)
+#> <popcounts> 6 populations, 100 loci (1-2 alleles per locus)
 #>   individuals per population: 8-8
-#>   populations: M01, M02, M03, M04, M05, M06, M07, M08 ... 
+#>   populations: M03_01, M15_01, M28_01, M41_01, M55_01, M70_01  
 ```
