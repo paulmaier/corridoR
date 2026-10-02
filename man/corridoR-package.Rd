@@ -29,11 +29,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Paul A. Maier \email{32253629+paulmaier@users.noreply.github.com} (\href{https://orcid.org/0000-0003-0851-8827}{ORCID}) [copyright holder]
+\strong{Maintainer}: Paul A. Maier \email{maierpa@gmail.com} (\href{https://orcid.org/0000-0003-0851-8827}{ORCID}) [copyright holder]
 
 Authors:
 \itemize{
-  \item Paul A. Maier \email{32253629+paulmaier@users.noreply.github.com} (\href{https://orcid.org/0000-0003-0851-8827}{ORCID}) [copyright holder]
+  \item Paul A. Maier \email{maierpa@gmail.com} (\href{https://orcid.org/0000-0003-0851-8827}{ORCID}) [copyright holder]
 }
 
 }

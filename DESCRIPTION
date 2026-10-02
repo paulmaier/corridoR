@@ -12,9 +12,10 @@ Description: Tools for modeling genetic connectivity along migration
     environmental features can choose its own corridor bandwidth; and
     pairwise predictions of differentiation and directional migration are
     mapped back onto the landscape as magnitude and net-direction surfaces.
-    Includes readers for common genotype formats (STRUCTURE, GENEPOP, VCF,
-    GenAlEx, FSTAT, PLINK, and 'adegenet' objects), pairwise FST, and the
-    directional differentiation of Sundqvist et al. (2016)
+    Includes readers for common genotype formats ('STRUCTURE', 'GENEPOP',
+    'VCF', 'GenAlEx', 'FSTAT', 'PLINK', and 'adegenet' objects), pairwise
+    fixation indices, and the directional differentiation of Sundqvist et al.
+    (2016)
     <doi:10.1002/ece3.2096>.
 License: MIT + file LICENSE
 URL: https://github.com/paulmaier/corridoR, https://paulmaier.github.io/corridoR/

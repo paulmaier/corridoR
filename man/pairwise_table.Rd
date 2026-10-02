@@ -19,7 +19,7 @@ Turns matrices of FST and dM into a long table with one row per directed
 pair, the layout used by the modeling functions.
 }
 \examples{
-ex <- corridor_example()
-pc <- read_genotypes(ex$files$structure)
-head(pairwise_table(pairwise_fst(pc), directional_gst(pc)$dM))
+fst <- matrix(c(0, 0.1, 0.2, 0.1, 0, 0.15, 0.2, 0.15, 0), 3,
+              dimnames = list(c("a", "b", "c"), c("a", "b", "c")))
+pairwise_table(fst)
 }

@@ -20,11 +20,13 @@
 #' @param progress Show a progress bar.
 #' @return A data.frame with `from`, `to` and one column per layer of `env`.
 #' @examples
+#' \donttest{
 #' ex <- corridor_example()
 #' tr <- make_transition(ex$resistance)
 #' pr <- data.frame(from = c("M01", "M02"), to = c("M12", "M05"))
 #' acc <- accumulated_cost(tr, ex$sites[ex$sites$site %in% unlist(pr), ])
 #' corridor_extract(ex$env, pr, acc = acc, q = 0.05)
+#' }
 #' @export
 corridor_extract <- function(env, pairs, acc = NULL, q = 0.05, buffers = NULL,
                              stat = "mean", progress = interactive()) {

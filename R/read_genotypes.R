@@ -53,8 +53,10 @@
 #' @examples
 #' ex <- corridor_example()
 #' read_genotypes(ex$files$structure)
+#' \donttest{
 #' read_genotypes(ex$files$genepop)
 #' read_genotypes(ex$files$vcf, pop = ex$files$popmap)
+#' }
 #' @export
 read_genotypes <- function(file, format = c("auto", "structure", "genepop", "vcf", "genalex",
                                             "fstat", "plink"),

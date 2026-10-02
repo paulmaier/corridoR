@@ -83,6 +83,8 @@ Objects already in R (\pkg{adegenet} \code{genind}, \code{genpop}, \code{genligh
 \examples{
 ex <- corridor_example()
 read_genotypes(ex$files$structure)
+\donttest{
 read_genotypes(ex$files$genepop)
 read_genotypes(ex$files$vcf, pop = ex$files$popmap)
+}
 }

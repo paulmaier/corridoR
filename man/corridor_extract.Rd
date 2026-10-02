@@ -44,9 +44,11 @@ than marginal ones. With path buffers, cells are weighted by the share of
 the cell inside the buffer.
 }
 \examples{
+\donttest{
 ex <- corridor_example()
 tr <- make_transition(ex$resistance)
 pr <- data.frame(from = c("M01", "M02"), to = c("M12", "M05"))
 acc <- accumulated_cost(tr, ex$sites[ex$sites$site \%in\% unlist(pr), ])
 corridor_extract(ex$env, pr, acc = acc, q = 0.05)
+}
 }
