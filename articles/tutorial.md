@@ -25,7 +25,7 @@ falls away steeply into a rain shadow. Two river canyons cut the western
 slope, with walls steep enough to block movement except near their
 heads.
 
-Eighty meadows are sampled, 12 snowmelt-dependent toads in each. They
+Eighty meadows are sampled, eight snowmelt-dependent toads in each. They
 belong to four lineages: West and South at low elevation on either side
 of the southern canyon, and North and East at high elevation. Lineages
 at the same elevation share their environment but not their history.

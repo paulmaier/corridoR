@@ -38,10 +38,12 @@ crest is a refuge
 
 ## Installation
 
+Install the development version from GitHub:
+
 ``` r
 
-# install.packages("remotes")
-remotes::install_github("paulmaier/corridoR")
+# install.packages("pak")
+pak::pak("paulmaier/corridoR")
 ```
 
 ## A quick look
