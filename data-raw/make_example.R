@@ -39,7 +39,7 @@ out <- Sys.getenv("SIM_OUT", "inst/extdata")
 #   "valleys_warmer": the same with a stronger warming, which pushes many
 #     meadows outside today's range of moisture.
 scenario <- Sys.getenv("SIM_SCENARIO", "example")
-crs_local <- "+proj=tmerc +lat_0=0 +lon_0=0 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +units=m +no_defs"
+crs_local <- "+proj=tmerc +lat_0=0 +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"
 
 # ---- terrain ------------------------------------------------------------------
 cell <- as.numeric(Sys.getenv("SIM_RES", "200"))
@@ -279,7 +279,8 @@ writeRaster(c(dem, resistance, res_slope, res_cover), file.path(out, "landscape.
             gdal = gd, datatype = "FLT4S")
 writeRaster(env, file.path(out, "env_present.tif"), overwrite = TRUE, gdal = gd, datatype = "FLT4S")
 writeRaster(env_future, file.path(out, "env_future.tif"), overwrite = TRUE, gdal = gd, datatype = "FLT4S")
-st_write(sites, file.path(out, "sites.gpkg"), delete_dsn = TRUE, quiet = TRUE)
+st_write(sites, file.path(out, "sites.gpkg"), delete_dsn = TRUE, quiet = TRUE,
+         dataset_options = "VERSION=1.2")                            # readable by older GDAL
 # time since each pair of lineages split (thousand years), as in Maier et al. (2019)
 write.csv(data.frame(lineage1 = c("North", "North", "North", "East", "East", "West"),
                      lineage2 = c("East", "West", "South", "West", "South", "South"),

@@ -1,11 +1,12 @@
 # A small landscape with a wall across the middle and a gap at the top
 small_world <- function() {
-  r <- terra::rast(nrows = 30, ncols = 40, xmin = 0, xmax = 4000, ymin = 0, ymax = 3000, crs = "local")
+  crs <- "+proj=tmerc +lat_0=0 +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"
+  r <- terra::rast(nrows = 30, ncols = 40, xmin = 0, xmax = 4000, ymin = 0, ymax = 3000, crs = crs)
   terra::values(r) <- 1
   wall <- terra::colFromX(r, 2000)
   r[5:30, wall] <- 1e6
   sites <- sf::st_as_sf(data.frame(site = c("w", "e", "s"), x = c(500, 3500, 2500), y = c(2500, 2500, 500)),
-                        coords = c("x", "y"))
+                        coords = c("x", "y"), crs = crs)
   list(r = r, sites = sites)
 }
 
