@@ -17,6 +17,8 @@
 
 - [`make_transition()`](https://paulmaier.github.io/corridoR/reference/make_transition.md)
   : Transition layer from a resistance surface
+- [`rank_resistance()`](https://paulmaier.github.io/corridoR/reference/rank_resistance.md)
+  : Rank resistance surfaces by how well they explain genetic distance
 - [`least_cost_paths()`](https://paulmaier.github.io/corridoR/reference/least_cost_paths.md)
   : Least cost paths between sites
 - [`accumulated_cost()`](https://paulmaier.github.io/corridoR/reference/accumulated_cost.md)

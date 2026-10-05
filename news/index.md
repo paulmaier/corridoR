@@ -2,6 +2,13 @@
 
 ## corridoR (development version)
 
+- New
+  [`rank_resistance()`](https://paulmaier.github.io/corridoR/reference/rank_resistance.md)
+  compares candidate resistance surfaces by how well least cost distance
+  through each explains genetic distance (mixed models with source and
+  destination as random effects), with straight-line distance as a
+  baseline. The tutorial uses it in step 2.
+
 - [`fit_connectivity()`](https://paulmaier.github.io/corridoR/reference/fit_connectivity.md)
   and
   [`select_bandwidth()`](https://paulmaier.github.io/corridoR/reference/select_bandwidth.md)

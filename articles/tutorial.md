@@ -145,15 +145,10 @@ par(op)
 
 ## Step 2. Choosing the most likely migration paths
 
-Corridors start from a resistance surface. In the paper, `ResistanceGA`
-optimized the resistance of slope and of vegetation moisture, and eleven
-blends of the two were compared. The example includes both components,
-so we can do the same. For each blend,
-[`make_transition()`](https://paulmaier.github.io/corridoR/reference/make_transition.md)
-builds the conductance layer (ridgelines and canyon walls at resistance
-1e6 cannot be crossed), and
-[`gdistance::costDistance()`](https://AgrDataSci.github.io/gdistance/reference/costDistance-methods.html)
-gives the cost of the cheapest route between each pair of meadows.
+Corridors start from a resistance surface, which you supply. In the
+paper, `ResistanceGA` optimized the resistance of slope and of
+vegetation moisture, and eleven blends of the two were compared. The
+example includes both components, so we can do the same.
 
 ``` r
 
@@ -168,36 +163,29 @@ blend <- function(w) {
   r[ex$resistance_slope >= 1e6] <- 1e6
   r
 }
-cost_dist <- function(r) {
-  cd <- as.matrix(gdistance::costDistance(make_transition(r, barrier = 1e6), xy))
-  dimnames(cd) <- list(rownames(xy), rownames(xy))
-  cd[cbind(pairs$from, pairs$to)]
-}
 weights <- seq(0, 1, by = 0.2)
-dists <- sapply(weights, function(w) cost_dist(blend(w)))
-colnames(dists) <- paste0("slope_", weights)
-dists <- cbind(dists, straight_line = sqrt(rowSums((xy[pairs$from, ] - xy[pairs$to, ])^2)))
+surfaces <- setNames(lapply(weights, blend), paste0("slope_", weights))
 ```
 
-Each hypothesis is ranked by a mixed model of FST on (scaled) distance,
-with source and destination meadow as random effects:
+[`rank_resistance()`](https://paulmaier.github.io/corridoR/reference/rank_resistance.md)
+finds the cost of the cheapest route between each pair of meadows
+through every surface (ridgelines and canyon walls at resistance 1e6
+cannot be crossed) and ranks the surfaces by a mixed model of FST on
+that distance, with source and destination meadow as random effects.
+Straight-line distance is added as a baseline.
 
 ``` r
 
-d <- data.frame(pairs, fst = fst[cbind(pairs$from, pairs$to)], scale(dists))
-rank <- sapply(colnames(dists), function(h) {
-  fit <- lme4::lmer(as.formula(paste("fst ~", h, "+ (1 | from) + (1 | to)")), data = d, REML = FALSE)
-  c(logLik = as.numeric(logLik(fit)), AIC = AIC(fit))
-})
-round(t(rank)[order(-rank["logLik", ]), ], 1)
-#>               logLik     AIC
-#> slope_1       2289.0 -4568.0
-#> slope_0.8     2275.2 -4540.4
-#> slope_0.6     2249.4 -4488.9
-#> slope_0.4     2214.4 -4418.8
-#> slope_0.2     2170.2 -4330.5
-#> slope_0       2121.5 -4233.0
-#> straight_line 2115.3 -4220.7
+rank <- rank_resistance(surfaces, ex$sites, fst, pairs = pairs)
+rank
+#>      hypothesis   logLik       AIC delta_AIC        R2m       slope
+#> 1       slope_1 2288.989 -4567.978   0.00000 0.03622447 0.009864794
+#> 2     slope_0.8 2275.221 -4540.442  27.53579 0.05508055 0.011909024
+#> 3     slope_0.6 2249.432 -4488.865  79.11340 0.07827913 0.014188459
+#> 4     slope_0.4 2214.401 -4418.801 149.17720 0.09825830 0.016025037
+#> 5     slope_0.2 2170.227 -4330.453 237.52524 0.10915942 0.017045400
+#> 6       slope_0 2121.487 -4232.974 335.00414 0.10355020 0.016687517
+#> 7 straight_line 2115.328 -4220.656 347.32251 0.01264270 0.006066638
 ```
 
 Slope-heavy hypotheses fit best: pure slope ranks first, just ahead of
@@ -451,8 +439,10 @@ plot(st_geometry(ex$sites), pch = 21, bg = lc[ex$sites$lineage], col = "white", 
   reads, or matrices of FST and dM from other software.
 - **Sites:** an `sf` layer of points or polygons whose ID column matches
   the population names.
-- **Resistance:** compare a few hypotheses as in step 2, or optimize
-  them with `ResistanceGA`.
+- **Resistance:** a raster per hypothesis, built by hand from layers
+  such as slope or vegetation, or optimized with `ResistanceGA`;
+  [`rank_resistance()`](https://paulmaier.github.io/corridoR/reference/rank_resistance.md)
+  compares them as in step 2.
 - **Environment:** any stack of rasters, with future versions under the
   same layer names.
 - **Lineages:** a table of site lineages and a table of divergence times
