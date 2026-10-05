@@ -63,7 +63,7 @@ paths
 #> Geometry type: LINESTRING
 #> Dimension:     XY
 #> Bounding box:  xmin: 3500 ymin: 3100 xmax: 30100 ymax: 23700
-#> Projected CRS: +proj=tmerc +lat_0=0 +lon_0=0 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +units=m +no_defs
+#> Projected CRS: +proj=tmerc +lat_0=0 +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs
 #>   from  to euclidean                       geometry   length
 #> 1  M01 M12   19636.7 LINESTRING (3500 19500, 370... 57765.03
 # }

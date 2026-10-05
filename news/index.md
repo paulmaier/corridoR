@@ -2,6 +2,11 @@
 
 ## corridoR (development version)
 
+- The example data no longer raise warnings with older GDAL and PROJ
+  libraries: the sites are stored as GeoPackage 1.2, and the example
+  coordinate system names its datum (WGS84) explicitly. Coordinates and
+  values are unchanged.
+
 - New
   [`rank_resistance()`](https://paulmaier.github.io/corridoR/reference/rank_resistance.md)
   compares candidate resistance surfaces by how well least cost distance

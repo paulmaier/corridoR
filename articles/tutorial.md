@@ -53,7 +53,7 @@ ex$sites
 #> Geometry type: POINT
 #> Dimension:     XY
 #> Bounding box:  xmin: 3500 ymin: 2100 xmax: 58100 ymax: 37900
-#> Projected CRS: +proj=tmerc +lat_0=0 +lon_0=0 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +units=m +no_defs
+#> Projected CRS: +proj=tmerc +lat_0=0 +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs
 #> First 10 features:
 #>    site elevation lineage                geom
 #> 1   M01      1070    West  POINT (3500 19500)
