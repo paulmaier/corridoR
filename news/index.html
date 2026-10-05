@@ -39,7 +39,9 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="corridor-development-version">corridoR (development version)<a class="anchor" aria-label="anchor" href="#corridor-development-version"></a></h2>
-</div>
+<ul><li>
+<code><a href="../reference/fit_connectivity.html">fit_connectivity()</a></code> and <code><a href="../reference/select_bandwidth.html">select_bandwidth()</a></code> now keep both directions of a pair (A to B and B to A) in the same cross-validation fold. Before, a pair could be predicted from its own reverse, which inflated cross-validated R2 and could favor overfit settings.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="corridor-010">corridoR 0.1.0<a class="anchor" aria-label="anchor" href="#corridor-010"></a></h2>
 <ul><li>First release: genotype readers (STRUCTURE, GENEPOP, VCF, GenAlEx, FSTAT, PLINK, adegenet and vcfR objects), pairwise FST and directional GST, least cost paths and corridors, weighted environmental extraction, per-group bandwidth selection, Cubist models of connectivity, and maps of projected change in magnitude and net direction. Includes a simulated example landscape.</li>

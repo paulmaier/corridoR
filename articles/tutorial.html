@@ -344,12 +344,12 @@ features by importance, and refits.</p>
 <span><span class="va">m_dm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_connectivity.html">fit_connectivity</a></span><span class="op">(</span><span class="va">now</span>, <span class="va">y</span><span class="op">$</span><span class="va">dM</span>, <span class="va">model_groups</span>, committees <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">50</span><span class="op">)</span>, neighbors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">m_fst</span></span>
 <span><span class="co">#&gt; &lt;corridor_model&gt; Cubist, 50 committees, 5 neighbors</span></span>
-<span><span class="co">#&gt;   12 features after PCA and VIF filtering; CV RMSE 0.01421, R2 0.940</span></span>
+<span><span class="co">#&gt;   12 features after PCA and VIF filtering; CV RMSE 0.01811, R2 0.902</span></span>
 <span><span class="co">#&gt;   most important: climate_PC2 (100), climate_PC1 (94), path_length (68), slope (66), climate_PC3 (52)</span></span>
 <span><span class="va">m_dm</span></span>
-<span><span class="co">#&gt; &lt;corridor_model&gt; Cubist, 50 committees, 5 neighbors</span></span>
-<span><span class="co">#&gt;   12 features after PCA and VIF filtering; CV RMSE 0.04393, R2 0.521</span></span>
-<span><span class="co">#&gt;   most important: moisture.at (100), climate.at_PC2 (67), forest.at (50), climate.at_PC3 (42), climate_PC2 (41)</span></span></code></pre></div>
+<span><span class="co">#&gt; &lt;corridor_model&gt; Cubist, 10 committees, 5 neighbors</span></span>
+<span><span class="co">#&gt;   12 features after PCA and VIF filtering; CV RMSE 0.04336, R2 0.532</span></span>
+<span><span class="co">#&gt;   most important: moisture.at (100), climate.at_PC2 (76), climate_PC2 (59), climate.at_PC1 (57), forest.at (55)</span></span></code></pre></div>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">op</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">4</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">m_fst</span><span class="op">$</span><span class="va">observed</span>, <span class="va">m_fst</span><span class="op">$</span><span class="va">cv_pred</span>, pch <span class="op">=</span> <span class="fl">16</span>, col <span class="op">=</span> <span class="st">"#2a7f9e44"</span>, xlab <span class="op">=</span> <span class="st">"Observed FST"</span>,</span>
@@ -382,12 +382,12 @@ PCA loadings and predicts each pair now and under warming.</p>
 <span>                     dM <span class="op">=</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">m_dm</span>, <span class="va">future</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">m_dm</span>, <span class="va">now</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">change</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"fst"</span>, <span class="st">"dM"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       fst                  dM            </span></span>
-<span><span class="co">#&gt;  Min.   :-0.224821   Min.   :-3.781e-01  </span></span>
-<span><span class="co">#&gt;  1st Qu.:-0.008467   1st Qu.:-4.532e-02  </span></span>
-<span><span class="co">#&gt;  Median : 0.031226   Median : 7.864e-05  </span></span>
-<span><span class="co">#&gt;  Mean   : 0.024150   Mean   :-1.032e-04  </span></span>
-<span><span class="co">#&gt;  3rd Qu.: 0.054055   3rd Qu.: 4.481e-02  </span></span>
-<span><span class="co">#&gt;  Max.   : 0.216369   Max.   : 3.611e-01</span></span></code></pre></div>
+<span><span class="co">#&gt;  Min.   :-0.224821   Min.   :-0.3607034  </span></span>
+<span><span class="co">#&gt;  1st Qu.:-0.008467   1st Qu.:-0.0462446  </span></span>
+<span><span class="co">#&gt;  Median : 0.031226   Median : 0.0003446  </span></span>
+<span><span class="co">#&gt;  Mean   : 0.024150   Mean   : 0.0030933  </span></span>
+<span><span class="co">#&gt;  3rd Qu.: 0.054055   3rd Qu.: 0.0455147  </span></span>
+<span><span class="co">#&gt;  Max.   : 0.216369   Max.   : 0.4056813</span></span></code></pre></div>
 <p><code><a href="../reference/map_pairwise.html">map_pairwise()</a></code> spreads each pair’s change over its
 corridor and averages overlapping corridors. For dM it also sums
 direction vectors, each pointing from source to destination and weighted
@@ -454,9 +454,8 @@ need time rather than memory.</li>
 Landscape genetics of a sub-alpine toad: climate change predicted to
 induce upward range shifts via asymmetrical migration corridors.
 <em>Heredity</em> 129:257-272. <a href="https://doi.org/10.1038/s41437-022-00561-x" class="external-link uri">https://doi.org/10.1038/s41437-022-00561-x</a></p>
-<p>Maier PA (2027) corridoR: Migration corridors and genetic range
-shifts from landscape genetic data. <em>Journal of Open Source
-Software</em> (in preparation).</p>
+<p>Maier PA (2027) corridoR: an R package for forecasting genetic range
+shifts along migration corridors. Manuscript in preparation.</p>
 </div>
 <div class="section level2">
 <h2 id="other-references">Other references<a class="anchor" aria-label="anchor" href="#other-references"></a>

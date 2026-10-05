@@ -47,7 +47,9 @@ fit_connectivity(
 
 - folds:
 
-  Number of cross-validation folds.
+  Number of cross-validation folds. When `data` has `from` and `to`
+  columns, both directions of a pair always fall in the same fold, so a
+  pair is never used to predict its own reverse.
 
 - vif_threshold:
 

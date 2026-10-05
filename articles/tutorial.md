@@ -336,12 +336,12 @@ m_fst <- fit_connectivity(now, y$fst, model_groups, committees = c(1, 10, 50), n
 m_dm <- fit_connectivity(now, y$dM, model_groups, committees = c(1, 10, 50), neighbors = c(0, 5))
 m_fst
 #> <corridor_model> Cubist, 50 committees, 5 neighbors
-#>   12 features after PCA and VIF filtering; CV RMSE 0.01421, R2 0.940
+#>   12 features after PCA and VIF filtering; CV RMSE 0.01811, R2 0.902
 #>   most important: climate_PC2 (100), climate_PC1 (94), path_length (68), slope (66), climate_PC3 (52)
 m_dm
-#> <corridor_model> Cubist, 50 committees, 5 neighbors
-#>   12 features after PCA and VIF filtering; CV RMSE 0.04393, R2 0.521
-#>   most important: moisture.at (100), climate.at_PC2 (67), forest.at (50), climate.at_PC3 (42), climate_PC2 (41)
+#> <corridor_model> Cubist, 10 committees, 5 neighbors
+#>   12 features after PCA and VIF filtering; CV RMSE 0.04336, R2 0.532
+#>   most important: moisture.at (100), climate.at_PC2 (76), climate_PC2 (59), climate.at_PC1 (57), forest.at (55)
 ```
 
 ``` r
@@ -392,12 +392,12 @@ change <- data.frame(from = now$from, to = now$to,
                      dM = predict(m_dm, future) - predict(m_dm, now))
 summary(change[, c("fst", "dM")])
 #>       fst                  dM            
-#>  Min.   :-0.224821   Min.   :-3.781e-01  
-#>  1st Qu.:-0.008467   1st Qu.:-4.532e-02  
-#>  Median : 0.031226   Median : 7.864e-05  
-#>  Mean   : 0.024150   Mean   :-1.032e-04  
-#>  3rd Qu.: 0.054055   3rd Qu.: 4.481e-02  
-#>  Max.   : 0.216369   Max.   : 3.611e-01
+#>  Min.   :-0.224821   Min.   :-0.3607034  
+#>  1st Qu.:-0.008467   1st Qu.:-0.0462446  
+#>  Median : 0.031226   Median : 0.0003446  
+#>  Mean   : 0.024150   Mean   : 0.0030933  
+#>  3rd Qu.: 0.054055   3rd Qu.: 0.0455147  
+#>  Max.   : 0.216369   Max.   : 0.4056813
 ```
 
 [`map_pairwise()`](https://paulmaier.github.io/corridoR/reference/map_pairwise.md)
@@ -472,9 +472,8 @@ Landscape genetics of a sub-alpine toad: climate change predicted to
 induce upward range shifts via asymmetrical migration corridors.
 *Heredity* 129:257-272. <https://doi.org/10.1038/s41437-022-00561-x>
 
-Maier PA (2027) corridoR: Migration corridors and genetic range shifts
-from landscape genetic data. *Journal of Open Source Software* (in
-preparation).
+Maier PA (2027) corridoR: an R package for forecasting genetic range
+shifts along migration corridors. Manuscript in preparation.
 
 ## Other references
 

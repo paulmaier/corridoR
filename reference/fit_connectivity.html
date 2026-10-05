@@ -100,7 +100,9 @@ as they are and always kept.</p></dd>
 
 
 <dt id="arg-folds">folds<a class="anchor" aria-label="anchor" href="#arg-folds"></a></dt>
-<dd><p>Number of cross-validation folds.</p></dd>
+<dd><p>Number of cross-validation folds. When <code>data</code> has <code>from</code> and
+<code>to</code> columns, both directions of a pair always fall in the same fold, so
+a pair is never used to predict its own reverse.</p></dd>
 
 
 <dt id="arg-vif-threshold">vif_threshold<a class="anchor" aria-label="anchor" href="#arg-vif-threshold"></a></dt>

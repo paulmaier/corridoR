@@ -25,14 +25,12 @@ Heredity 129:257-272. https://doi.org/10.1038/s41437-022-00561-x
       doi = {10.1038/s41437-022-00561-x},
     }
 
-Maier PA (2027) corridoR: Migration corridors and genetic range shifts
-from landscape genetic data. Journal of Open Source Software (in
-preparation).
+Maier PA (2027) corridoR: an R package for forecasting genetic range
+shifts along migration corridors. Manuscript in preparation.
 
-    @Article{,
-      title = {corridoR: Migration corridors and genetic range shifts from landscape genetic data},
+    @Unpublished{,
+      title = {corridoR: an R package for forecasting genetic range shifts along migration corridors},
       author = {Paul A. Maier},
-      journal = {Journal of Open Source Software},
       year = {2027},
-      note = {In preparation. The volume, pages and DOI will be added here on publication.},
+      note = {Manuscript in preparation. The journal, volume, pages and DOI will be added here on publication.},
     }

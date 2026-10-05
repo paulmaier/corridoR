@@ -125,7 +125,7 @@ the lineage effect added. Then a Cubist model of dM:</p>
 <span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_connectivity.html">fit_connectivity</a></span><span class="op">(</span><span class="va">now</span>, <span class="va">y</span>, <span class="va">groups</span>, committees <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">20</span><span class="op">)</span>, neighbors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>, folds <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="va">m</span></span>
 <span><span class="co">#&gt; &lt;corridor_model&gt; Cubist, 20 committees, 5 neighbors</span></span>
-<span><span class="co">#&gt;   14 features after PCA and VIF filtering; CV RMSE 0.04485, R2 0.483</span></span>
+<span><span class="co">#&gt;   14 features after PCA and VIF filtering; CV RMSE 0.04485, R2 0.485</span></span>
 <span><span class="co">#&gt;   most important: moisture.at (100), climate.at_PC2 (72), climate.at_PC1 (71), climate.at_PC3 (42), moisture (39)</span></span></code></pre></div>
 <p><strong>6. Forecast.</strong> Predict under warming and map the
 change onto the corridors:</p>
@@ -147,9 +147,8 @@ nearby pairs this version is coarser than the full tutorial.</p>
 Landscape genetics of a sub-alpine toad: climate change predicted to
 induce upward range shifts via asymmetrical migration corridors.
 <em>Heredity</em> 129:257-272. <a href="https://doi.org/10.1038/s41437-022-00561-x" class="external-link uri">https://doi.org/10.1038/s41437-022-00561-x</a></p>
-<p>Maier PA (2027) corridoR: Migration corridors and genetic range
-shifts from landscape genetic data. <em>Journal of Open Source
-Software</em> (in preparation).</p>
+<p>Maier PA (2027) corridoR: an R package for forecasting genetic range
+shifts along migration corridors. Manuscript in preparation.</p>
 </div>
   </main>
 </div>

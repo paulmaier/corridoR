@@ -77,7 +77,7 @@ groups <- list(climate = c("snowpack", "runoff", "summer_temp"),
 m <- fit_connectivity(now, y, groups, committees = c(1, 20), neighbors = c(0, 5), folds = 5)
 m
 #> <corridor_model> Cubist, 20 committees, 5 neighbors
-#>   14 features after PCA and VIF filtering; CV RMSE 0.04485, R2 0.483
+#>   14 features after PCA and VIF filtering; CV RMSE 0.04485, R2 0.485
 #>   most important: moisture.at (100), climate.at_PC2 (72), climate.at_PC1 (71), climate.at_PC3 (42), moisture (39)
 ```
 
@@ -108,6 +108,5 @@ Landscape genetics of a sub-alpine toad: climate change predicted to
 induce upward range shifts via asymmetrical migration corridors.
 *Heredity* 129:257-272. <https://doi.org/10.1038/s41437-022-00561-x>
 
-Maier PA (2027) corridoR: Migration corridors and genetic range shifts
-from landscape genetic data. *Journal of Open Source Software* (in
-preparation).
+Maier PA (2027) corridoR: an R package for forecasting genetic range
+shifts along migration corridors. Manuscript in preparation.
