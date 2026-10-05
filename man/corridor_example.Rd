@@ -46,6 +46,6 @@ low elevation. The script that builds the example is in the package source
 }
 \examples{
 ex <- corridor_example()
-terra::plot(ex$dem)
+terra::plot(ex$dem, col = hcl.colors(100, "viridis"))
 plot(sf::st_geometry(ex$sites), add = TRUE, pch = 19)
 }

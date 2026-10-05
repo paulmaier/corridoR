@@ -115,7 +115,7 @@ accumulated_cost <- function(tr, sites, id = "site", filename = "") {
 #' tr <- make_transition(ex$resistance)
 #' acc <- accumulated_cost(tr, ex$sites[ex$sites$site %in% c("M01", "M12"), ])
 #' w <- lcc_weights(acc, "M01", "M12", q = c(0.005, 0.05))
-#' terra::plot(w)
+#' terra::plot(w, col = hcl.colors(100, "viridis"))
 #' }
 #' @export
 lcc_weights <- function(acc, from, to, q = 0.05) {

@@ -35,7 +35,7 @@
 #'   sf::st_coordinates(ex$sites)[match(v$from, ex$sites$site), 1]
 #' v$value <- ifelse(east, 0.05, -0.05)
 #' m <- map_pairwise(v, ex$acc, ex$sites)
-#' terra::plot(m$value)
+#' terra::plot(m$value, col = hcl.colors(100, "viridis"))
 #' }
 #' @export
 map_pairwise <- function(values, acc, sites, id = "site", q = 0.05, direction = TRUE,
@@ -116,7 +116,9 @@ map_pairwise <- function(values, acc, sites, id = "site", q = 0.05, direction = 
 #' v$value[3:4] <- -0.05
 #' m <- map_pairwise(v, ex$acc, ex$sites)
 #' a <- shift_arrows(m, cells = 15)
-#' terra::plot(m$value)
+#' len <- sqrt((a$xend - a$x)^2 + (a$yend - a$y)^2)
+#' a <- a[len > 0.02 * 15 * terra::res(m)[1], ]   # too short to draw, as in plot_shift()
+#' terra::plot(m$value, col = hcl.colors(100, "viridis"))
 #' arrows(a$x, a$y, a$xend, a$yend, length = 0.05)
 #' }
 #' @export

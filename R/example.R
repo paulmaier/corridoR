@@ -35,7 +35,7 @@
 #' @param acc Also compute the accumulated cost surfaces.
 #' @examples
 #' ex <- corridor_example()
-#' terra::plot(ex$dem)
+#' terra::plot(ex$dem, col = hcl.colors(100, "viridis"))
 #' plot(sf::st_geometry(ex$sites), add = TRUE, pch = 19)
 #' @export
 corridor_example <- function(acc = FALSE) {
