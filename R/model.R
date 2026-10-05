@@ -12,7 +12,8 @@
 #' @param response Numeric response for each row (each pair).
 #' @param groups A named list mapping group names to feature (column) names.
 #' @param weights Optional case weights, see [pair_weights()].
-#' @param folds Number of cross-validation folds.
+#' @param folds Number of cross-validation folds. Both directions of a pair
+#'   (rows A to B and B to A) always fall in the same fold.
 #' @param num.trees Trees per forest.
 #' @param min.node.size Values to try for the minimum node size. `mtry` is
 #'   tuned over every value from 1 to the number of features in the group.
@@ -26,8 +27,9 @@
 #' # the response better
 #' set.seed(1)
 #' n <- 150
-#' wide <- data.frame(from = "a", to = "b", snow = rnorm(n), slope = rnorm(n))
-#' narrow <- data.frame(from = "a", to = "b", snow = wide$snow + rnorm(n), slope = rnorm(n))
+#' ids <- data.frame(from = paste0("s", 1:n), to = paste0("t", 1:n))
+#' wide <- data.frame(ids, snow = rnorm(n), slope = rnorm(n))
+#' narrow <- data.frame(ids, snow = wide$snow + rnorm(n), slope = rnorm(n))
 #' fst <- 0.1 - 0.03 * wide$snow + rnorm(n, sd = 0.01)
 #' sel <- select_bandwidth(list(narrow = narrow, wide = wide), fst,
 #'                         groups = list(climate = "snow", terrain = "slope"),
@@ -38,7 +40,7 @@ select_bandwidth <- function(features, response, groups, weights = NULL, folds =
                              num.trees = 1000, min.node.size = c(1, 5, 10), seed = 12345) {
   need("ranger")
   set.seed(seed)
-  fold_id <- sample(rep(seq_len(folds), length.out = length(response)))
+  fold_id <- pair_folds(features[[1]], folds)
   res <- list()
   for (g in names(groups)) for (bw in names(features)) {
     x <- features[[bw]][, groups[[g]], drop = FALSE]
@@ -106,7 +108,9 @@ pair_weights <- function(from, to) {
 #'   not in any group (for example path length or a lineage term) are used
 #'   as they are and always kept.
 #' @param committees,neighbors Values to try.
-#' @param folds Number of cross-validation folds.
+#' @param folds Number of cross-validation folds. When `data` has `from` and
+#'   `to` columns, both directions of a pair always fall in the same fold, so
+#'   a pair is never used to predict its own reverse.
 #' @param vif_threshold Collinearity cutoff. `Inf` skips the VIF step.
 #' @param seed Random seed for the folds.
 #' @return An object of class `corridor_model` with the final Cubist fit,
@@ -137,7 +141,9 @@ fit_connectivity <- function(data, response, groups, committees = c(1, 10, 50, 7
   X <- cbind(data[, fixed, drop = FALSE], do.call(cbind, unname(lapply(pcs, `[[`, "x"))))
   X <- X[, vapply(X, function(v) length(unique(v)) > 1, logical(1)), drop = FALSE]
 
-  full <- tune_cubist(X, response, committees, neighbors, folds, seed)
+  set.seed(seed)
+  fold_id <- pair_folds(data, folds)
+  full <- tune_cubist(X, response, committees, neighbors, folds, seed, fold_id)
   vars <- names(X)
   if (is.finite(vif_threshold)) {
     imp <- cubist_importance(full$fit)
@@ -145,7 +151,7 @@ fit_connectivity <- function(data, response, groups, committees = c(1, 10, 50, 7
     keep <- vif_select(X[, cand, drop = FALSE], imp[cand], vif_threshold)
     vars <- c(intersect(fixed, names(X)), keep)
   }
-  final <- tune_cubist(X[, vars, drop = FALSE], response, committees, neighbors, folds, seed)
+  final <- tune_cubist(X[, vars, drop = FALSE], response, committees, neighbors, folds, seed, fold_id)
   imp <- cubist_importance(final$fit)
   structure(list(fit = final$fit, committees = final$best$committees, neighbors = final$best$neighbors,
                  vars = vars, groups = groups, fixed = fixed,
@@ -208,9 +214,7 @@ group_pca <- function(x, prefix) {
   list(x = s, pca = pca)
 }
 
-tune_cubist <- function(X, y, committees, neighbors, folds, seed) {
-  set.seed(seed)
-  fold_id <- sample(rep(seq_len(folds), length.out = length(y)))
+tune_cubist <- function(X, y, committees, neighbors, folds, seed, fold_id) {
   pred <- array(NA_real_, c(length(y), length(committees), length(neighbors)))
   for (f in seq_len(folds)) {
     tr <- fold_id != f
@@ -231,6 +235,22 @@ tune_cubist <- function(X, y, committees, neighbors, folds, seed) {
   fit <- Cubist::cubist(X, y, committees = grid$committees[b])
   list(fit = fit, results = grid, best = grid[b, ],
        cv_pred = pred[, match(grid$committees[b], committees), match(grid$neighbors[b], neighbors)])
+}
+
+# Cross-validation folds that keep both directions of a pair together: rows
+# A->B and B->A share their corridor features (and FST), so splitting them
+# would let the model see a test pair during training.
+pair_folds <- function(data, folds) {
+  if (all(c("from", "to") %in% names(data)) &&
+      length(unique(paste(pmin(as.character(data$from), as.character(data$to)),
+                          pmax(as.character(data$from), as.character(data$to))))) >= folds) {
+    a <- as.character(data$from); b <- as.character(data$to)
+    key <- paste(pmin(a, b), pmax(a, b), sep = "\r")
+    u <- unique(key)
+    sample(rep(seq_len(folds), length.out = length(u)))[match(key, u)]
+  } else {
+    sample(rep(seq_len(folds), length.out = nrow(data)))
+  }
 }
 
 cubist_importance <- function(fit) {

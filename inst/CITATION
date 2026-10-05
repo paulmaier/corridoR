@@ -18,12 +18,11 @@ bibentry(
 )
 
 bibentry(
-  bibtype = "Article",
-  title = "corridoR: Migration corridors and genetic range shifts from landscape genetic data",
+  bibtype = "Unpublished",
+  title = "corridoR: an R package for forecasting genetic range shifts along migration corridors",
   author = person("Paul A.", "Maier"),
-  journal = "Journal of Open Source Software",
   year = "2027",
-  note = "In preparation. The volume, pages and DOI will be added here on publication.",
-  textVersion = paste("Maier PA (2027) corridoR: Migration corridors and genetic range shifts from",
-                      "landscape genetic data. Journal of Open Source Software (in preparation).")
+  note = "Manuscript in preparation. The journal, volume, pages and DOI will be added here on publication.",
+  textVersion = paste("Maier PA (2027) corridoR: an R package for forecasting genetic range shifts",
+                      "along migration corridors. Manuscript in preparation.")
 )

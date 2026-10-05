@@ -20,18 +20,34 @@
 # migrants respond to a wetter destination differs between lineages.
 #
 # Run from the package root: Rscript data-raw/make_example.R
+# The rasters are reproducible exactly. Genotypes depend on the linear algebra
+# library R uses, so a rebuild matches the shipped files statistically, not
+# bit for bit.
 
 suppressPackageStartupMessages({ library(terra); library(sf) })
 devtools::load_all(quiet = TRUE)
-set.seed(2027)
-out <- "inst/extdata"
+# SIM_SEED and SIM_OUT let the validation study build replicate landscapes
+set.seed(as.integer(Sys.getenv("SIM_SEED", "2027")))
+out <- Sys.getenv("SIM_OUT", "inst/extdata")
+# SIM_SCENARIO (validation only):
+#   "example" (default): the shipped example. Migrants respond to the moisture
+#     contrast between meadows.
+#   "valleys": winding valleys whose moist, gentle floors are the easy routes,
+#     flanked by steep, dry ridges. Total gene flow between two meadows follows
+#     the cost of the route between them; the direction of flow follows water
+#     stress at the meadows, with no plateau beyond today's range.
+#   "valleys_warmer": the same with a stronger warming, which pushes many
+#     meadows outside today's range of moisture.
+scenario <- Sys.getenv("SIM_SCENARIO", "example")
 crs_local <- "+proj=tmerc +lat_0=0 +lon_0=0 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +units=m +no_defs"
 
 # ---- terrain ------------------------------------------------------------------
-r <- rast(nrows = 200, ncols = 300, xmin = 0, xmax = 60000, ymin = 0, ymax = 40000, crs = crs_local)
+cell <- as.numeric(Sys.getenv("SIM_RES", "200"))
+r <- rast(nrows = 40000 / cell, ncols = 60000 / cell, xmin = 0, xmax = 60000, ymin = 0, ymax = 40000, crs = crs_local)
 xy <- xyFromCell(r, seq_len(ncell(r)))
 x <- xy[, 1] / 60000; y <- xy[, 2] / 40000
 
+logistic <- function(z) 1 / (1 + exp(-z))
 smooth_noise <- function(w, sd = 1) {
   n <- setValues(r, rnorm(ncell(r)))
   n <- focal(n, w = focalMat(n, w, "Gauss"), fun = "sum", na.policy = "omit", fillvalue = 0)
@@ -50,13 +66,26 @@ canyon <- function(y0, depth, head = 0.72) {
   -depth * down * exp(-((y - yc)^2) / (2 * wid^2))
 }
 elev <- base + spurs + canyon(0.33, 1300) + canyon(0.70, 1150)
+valleys <- grepl("^valleys", scenario)
+warmer <- scenario == "valleys_warmer"
+valley <- 0 * x
+if (valleys) {
+  # winding tributary valleys on the western slope: gentle floors, walls up to
+  # about 30 degrees, tapering out below the crest
+  for (k in seq_along(v0 <- c(0.12, 0.22, 0.50, 0.58, 0.86))) {
+    yc <- v0[k] + 0.04 * sin(2 * pi * 2.6 * x + 1.7 * k)
+    reach <- pmax(0, 1 - x / 0.78)^0.5
+    shape <- exp(-((y - yc)^2) / (2 * 0.011^2))
+    elev <- elev - 260 * reach * shape
+    valley <- pmax(valley, reach * exp(-((y - yc)^2) / (2 * 0.016^2)))
+  }
+}
 dem <- setValues(r, elev) + smooth_noise(1800, 110) + smooth_noise(600, 35)
 names(dem) <- "elevation"
 slope <- terrain(dem, "slope", unit = "degrees")
 slope <- focal(slope, 3, mean, na.policy = "only", na.rm = TRUE)
 
 # ---- climate, present and future ------------------------------------------------
-logistic <- function(z) 1 / (1 + exp(-z))
 shadow <- setValues(r, ifelse(west, 1, 0.55))                 # rain shadow east of the crest
 shadow <- focal(shadow, focalMat(shadow, 1200, "Gauss"), fun = "sum", na.policy = "omit", fillvalue = 1)
 # April 1 snowpack rises with elevation. Warming removes a share of it that
@@ -64,16 +93,20 @@ shadow <- focal(shadow, focalMat(shadow, 1200, "Gauss"), fun = "sum", na.policy 
 # Yosemite (about 90% near 1400 m, under 20% above 3100 m).
 n_snow <- smooth_noise(2500, 0.06); n_run <- smooth_noise(3000, 10)
 snow_now <- 1600 * logistic((dem - 1700) / 520) * shadow * exp(n_snow)
-loss <- clamp(0.95 * exp(-(dem - 1350) / 950), 0, 0.95)
+loss <- if (warmer) clamp(0.98 * exp(-(dem - 1350) / 1700), 0, 0.98) else
+  clamp(0.95 * exp(-(dem - 1350) / 950), 0, 0.95)
 snow_fut <- snow_now * (1 - loss)
-runoff_now <- clamp(0.6 * snow_now + 60 * shadow + n_run, 1)
-runoff_fut <- clamp(0.6 * snow_fut + 60 * shadow + n_run, 1)
+valley_r <- setValues(r, valley)                               # water collects in valley floors
+ridge_dry <- if (valleys) setValues(r, 1 - valley) else 0 * valley_r  # interfluves drain fast
+runoff_now <- clamp(0.6 * snow_now * (1 - 0.6 * ridge_dry) + 60 * shadow + n_run + 900 * valley_r, 1)
+runoff_fut <- clamp(0.6 * snow_fut * (1 - 0.6 * ridge_dry) + 60 * shadow + n_run +
+                     900 * valley_r * (1 - 0.6 * loss), 1)
 # meadow moisture index on a log scale: a change is relative to how wet a
 # meadow is now, so the meadows losing the largest share change the most
 moisture_now <- log(snow_now + runoff_now + 20)
 moisture_fut <- log(snow_fut + runoff_fut + 20)
 temp_now <- 33 - 6.4 * dem / 1000 + 1.5 * (1 - shadow) + smooth_noise(4000, 0.4)
-temp_fut <- temp_now + 4.2
+temp_fut <- temp_now + if (warmer) 6.5 else 4.2
 forest <- clamp(0.9 * logistic(-(dem - 2800) / 260) * (0.6 + 0.4 * shadow) + smooth_noise(1200, 0.12), 0, 1)
 
 env <- c(snow_now, runoff_now, moisture_now, temp_now, slope, forest)
@@ -85,11 +118,20 @@ names(env_future) <- names(env)
 res_slope <- 1 + 99 * (1 - exp(-slope / 16))^2
 res_cover <- 1 + 99 * (1 - forest)^1.5
 resistance <- 0.8 * res_slope + 0.2 * res_cover
+resistance_fut <- resistance
+if (valleys) {
+  # dry ground resists movement; dryness is scaled to today's range. The
+  # landscape file keeps the slope component separately (resistance_slope).
+  mrng <- global(moisture_now, range, na.rm = TRUE)
+  dry <- function(m) clamp((mrng[[2]] - m) / (mrng[[2]] - mrng[[1]]), 0, 1.5)
+  resistance <- 0.35 * res_slope + 0.05 * res_cover + 0.6 * (1 + 199 * dry(moisture_now)^3)
+  resistance_fut <- 0.35 * res_slope + 0.05 * res_cover + 0.6 * (1 + 199 * dry(moisture_fut)^3)
+}
 # the escarpment is impassable except at three passes over the crest
 passes <- c(0.18, 0.5, 0.83)
 near_pass <- setValues(r, apply(abs(outer(y, passes, "-")), 1, min) < 0.03)
 ridge <- slope > 33 & !near_pass
-resistance[ridge] <- 1e6; res_slope[ridge] <- 1e6; res_cover[ridge] <- 1e6
+resistance[ridge] <- 1e6; resistance_fut[ridge] <- 1e6; res_slope[ridge] <- 1e6; res_cover[ridge] <- 1e6
 names(resistance) <- "resistance"; names(res_slope) <- "resistance_slope"; names(res_cover) <- "resistance_cover"
 
 # ---- meadows: 14 in the foothills, 52 on the western slope, 14 east of the crest ----
@@ -105,7 +147,13 @@ place <- function(cand, n, gap, have = integer(0)) {
 }
 pick <- place(which(ok & !west & el > 1700), 14, 2200)
 pick <- place(which(ok & west & el > 1000 & el < 1500 & x < 0.3), 14, 3000, pick)
-pick <- place(which(ok & west & el >= 1500), 52, 3000, pick)
+west_ok <- which(ok & west & el >= 1500)
+if (valleys) {                                                        # most meadows sit on valley floors
+  pick <- place(west_ok[valley[west_ok] > 0.6], 38, 2000, pick)
+  pick <- place(west_ok, 80 - length(pick), 2500, pick)
+} else {
+  pick <- place(west_ok, 52, 3000, pick)
+}
 pick <- pick[order(xy[pick, 1])]
 sites <- st_as_sf(data.frame(site = sprintf("M%02d", seq_along(pick)), xy[pick, , drop = FALSE]),
                   coords = c("x", "y"), crs = crs_local)
@@ -132,9 +180,13 @@ message(nrow(sites), " meadows, ", paste(range(sites$elevation), collapse = "-")
 
 # ---- migration matrix ----------------------------------------------------------------
 tr <- make_transition(resistance, barrier = 1e6)
-acc <- accumulated_cost(tr, sites)
-cost <- sapply(sites$site, function(i) extract(acc[[i]], vect(sites))[, 2])
-dimnames(cost) <- list(sites$site, sites$site)
+pair_cost <- function(tr) {
+  acc <- accumulated_cost(tr, sites)
+  cm <- sapply(sites$site, function(i) extract(acc[[i]], vect(sites))[, 2])
+  dimnames(cm) <- list(sites$site, sites$site)
+  cm
+}
+cost <- pair_cost(tr)
 wet <- extract(moisture_now, vect(sites))[, 2]
 wet_z <- (wet - mean(wet)) / sd(wet)
 np <- nrow(sites)
@@ -145,15 +197,30 @@ lin <- sites$lineage
 beta <- c(West = 1.3, South = 1.4, North = 1.1, East = 1.2)[lin]
 wmax <- max(wet)
 stress <- function(w) pmax(0, (wmax - w) / sd(wet))
-base <- exp(-cost / quantile(cost[is.finite(cost) & cost > 0], 0.12))  # m[i, j]: into i from j
-base[!is.finite(base)] <- 0
-base[outer(lin, lin, "!=")] <- base[outer(lin, lin, "!=")] * 0.9      # slightly fewer between lineages
-pull <- function(w) {
+cost_scale <- quantile(cost[is.finite(cost) & cost > 0], 0.12)
+kernel <- function(cost) {                                           # m[i, j]: into i from j
+  b <- exp(-cost / cost_scale)
+  b[!is.finite(b)] <- 0
+  b[outer(lin, lin, "!=")] <- b[outer(lin, lin, "!=")] * 0.9          # slightly fewer between lineages
+  b
+}
+base <- kernel(cost)
+pull <- function(w, base) {
   dz <- outer(w, w, "-") / sd(wet)                                     # destination i wetter than source j
   # the pull saturates, so very dry meadows cannot send unlimited migrants
   base * exp(2 * tanh(sweep(pmax(dz, 0), 2, beta * stress(w), "*") / 3) - 0.3 * pmax(-dz, 0))
 }
-raw_now <- pull(wet)
+if (valleys) {
+  # total flow between two meadows follows route cost; the direction of flow
+  # follows water stress: m[i, j] = base * (1 + h_j - h_i), with h = b * stress
+  # rising without a plateau as meadows dry
+  b_lin <- c(West = 0.30, South = 0.33, North = 0.24, East = 0.27)[lin]
+  pull <- function(w, base) {
+    h <- b_lin * pmax(0, (wmax - w) / sd(wet))
+    base * pmax(0.05, 1 + outer(-h, h, "+"))
+  }
+}
+raw_now <- pull(wet, base)
 diag(raw_now) <- 0
 k_mig <- 0.06 / max(rowSums(raw_now))
 m <- raw_now * k_mig
@@ -166,7 +233,7 @@ p0 <- rbeta(nloc, 0.6, 0.6)
 anc <- sapply(unique(lin), function(l) rbeta(nloc, p0 * (1 / 0.02 - 1), (1 - p0) * (1 / 0.02 - 1)))
 p <- t(anc[, match(lin, unique(lin))])
 for (g in seq_len(gens)) {
-  p <- m %*% p
+  p <- pmin(pmax(m %*% p, 0), 1)                                   # guard against rounding past 0 or 1
   p[] <- rbinom(length(p), 2 * N, p) / (2 * N)
 }
 n_ind <- 8
@@ -220,7 +287,11 @@ write.csv(data.frame(lineage1 = c("North", "North", "North", "East", "East", "We
           file.path(out, "lineage_tmrca.csv"), row.names = FALSE)
 # the same migration model under future moisture, for checking forecasts
 wet_f <- extract(moisture_fut, vect(sites))[, 2]
-raw_fut <- pull(wet_f); diag(raw_fut) <- 0
+base_fut <- base
+if (valleys) base_fut <- kernel(pair_cost(make_transition(resistance_fut, barrier = 1e6)))  # drier ground costs more
+raw_fut <- pull(wet_f, base_fut); diag(raw_fut) <- 0
 saveRDS(list(migration_now = raw_now * k_mig, migration_future = raw_fut * k_mig, wet = wet,
-             wet_future = wet_f, beta = beta), "data-raw/simulation_truth.rds")
+             wet_future = wet_f, beta = beta, scenario = scenario,
+             outside_range = mean(wet_f < min(wet) | wet_f > max(wet))),
+        if (out == "inst/extdata") "data-raw/simulation_truth.rds" else file.path(out, "simulation_truth.rds"))
 message("done")

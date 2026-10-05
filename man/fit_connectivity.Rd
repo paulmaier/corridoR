@@ -26,7 +26,9 @@ as they are and always kept.}
 
 \item{committees, neighbors}{Values to try.}
 
-\item{folds}{Number of cross-validation folds.}
+\item{folds}{Number of cross-validation folds. When \code{data} has \code{from} and
+\code{to} columns, both directions of a pair always fall in the same fold, so
+a pair is never used to predict its own reverse.}
 
 \item{vif_threshold}{Collinearity cutoff. \code{Inf} skips the VIF step.}
 

@@ -15,8 +15,8 @@ test_that("select_bandwidth prefers the informative bandwidth", {
   skip_if_not_installed("ranger")
   set.seed(2)
   n <- 200
-  good <- data.frame(from = "a", to = "b", snow = rnorm(n))
-  bad <- data.frame(from = "a", to = "b", snow = rnorm(n))
+  good <- data.frame(from = paste0("s", 1:n), to = paste0("t", 1:n), snow = rnorm(n))
+  bad <- data.frame(from = paste0("s", 1:n), to = paste0("t", 1:n), snow = rnorm(n))
   y <- good$snow + rnorm(n, sd = 0.2)
   sel <- select_bandwidth(list(bad = bad, good = good), y, list(climate = "snow"), num.trees = 100,
                           folds = 3, min.node.size = 5)
@@ -41,4 +41,13 @@ test_that("fit_connectivity fits, reports and projects", {
   expect_length(p_now, n)
   p_fut <- predict(m, transform(d, snow = snow + 1, runoff = runoff + 1, temp = temp - 1))
   expect_gt(mean(p_fut - p_now), 0)          # more snow, higher response
+})
+
+test_that("cross-validation keeps both directions of a pair in one fold", {
+  d <- data.frame(from = c("a", "a", "b", "b", "c", "c"), to = c("b", "c", "a", "c", "a", "b"))
+  set.seed(1)
+  f <- pair_folds(d, 3)
+  key <- paste(pmin(d$from, d$to), pmax(d$from, d$to))
+  expect_true(all(tapply(f, key, function(v) length(unique(v))) == 1))
+  expect_length(unique(f), 3)
 })

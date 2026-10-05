@@ -9,3 +9,4 @@ Rplots.pdf
 vignettes/articles/*_cache/
 vignettes/articles/*_files/
 vignettes/*.html
+paper/

@@ -26,7 +26,8 @@ columns \code{from}, \code{to} and the features, as returned by
 
 \item{weights}{Optional case weights, see \code{\link[=pair_weights]{pair_weights()}}.}
 
-\item{folds}{Number of cross-validation folds.}
+\item{folds}{Number of cross-validation folds. Both directions of a pair
+(rows A to B and B to A) always fall in the same fold.}
 
 \item{num.trees}{Trees per forest.}
 
@@ -53,8 +54,9 @@ soil pick a narrow one.
 # the response better
 set.seed(1)
 n <- 150
-wide <- data.frame(from = "a", to = "b", snow = rnorm(n), slope = rnorm(n))
-narrow <- data.frame(from = "a", to = "b", snow = wide$snow + rnorm(n), slope = rnorm(n))
+ids <- data.frame(from = paste0("s", 1:n), to = paste0("t", 1:n))
+wide <- data.frame(ids, snow = rnorm(n), slope = rnorm(n))
+narrow <- data.frame(ids, snow = wide$snow + rnorm(n), slope = rnorm(n))
 fst <- 0.1 - 0.03 * wide$snow + rnorm(n, sd = 0.01)
 sel <- select_bandwidth(list(narrow = narrow, wide = wide), fst,
                         groups = list(climate = "snow", terrain = "slope"),
