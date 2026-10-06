@@ -88,7 +88,7 @@ east <- sf::st_coordinates(ex$sites)[match(v$to, ex$sites$site), 1] >
   sf::st_coordinates(ex$sites)[match(v$from, ex$sites$site), 1]
 v$value <- ifelse(east, 0.05, -0.05)
 m <- map_pairwise(v, ex$acc, ex$sites)
-terra::plot(m$value)
+terra::plot(m$value, col = hcl.colors(100, "viridis"))
 
 # }
 ```

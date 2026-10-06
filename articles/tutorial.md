@@ -76,7 +76,7 @@ fades toward the crest:
 
 plot(c(ex$env$moisture, ex$env_future$moisture - ex$env$moisture),
      main = c("Meadow moisture index now", "Change under warming"),
-     axes = FALSE, mar = c(1, 1, 2, 5))
+     col = hcl.colors(100, "viridis"), axes = FALSE, mar = c(1, 1, 2, 5))
 ```
 
 ![](tutorial_files/figure-html/climate-1.png)
