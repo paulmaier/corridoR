@@ -11,16 +11,16 @@ predicted upslope range shifts in the Yosemite toad:
 
 1.  **Genetic distances.** Read genotypes from STRUCTURE, GENEPOP, VCF,
     GenAlEx, FSTAT or PLINK files (or `adegenet` and `vcfR` objects),
-    then compute pairwise FST and directional differentiation (dM, the
-    net direction of migration).
+    then compute pairwise F_(ST) and directional differentiation (δM,
+    the net direction of migration).
 2.  **Least cost corridors.** Widen least cost paths into corridors
     whose cells are weighted by how likely a route through them is.
 3.  **Raw environmental features.** Summarize any raster inside each
     corridor, plus the contrast between source and destination sites.
 4.  **A bandwidth for each feature group.** Let climate act over a broad
     corridor and soil over a narrow one, chosen by cross-validation.
-5.  **Cubist models** of FST and dM, which extrapolate to future climate
-    better than random forests.
+5.  **Cubist models** of F_(ST) and δM, which extrapolate to future
+    climate better than random forests.
 6.  **Maps** of projected change, with arrows showing the net direction
     of migration.
 
@@ -83,7 +83,7 @@ tutorial](https://www.paulmaierresearch.com/software/yosemite-toad-corridors/).
 | PLINK (`.ped`/`.map`, `.raw`) | [`read_genotypes()`](https://paulmaier.github.io/corridoR/reference/read_genotypes.md) | convert `.bed` with `plink --recode A` |
 | `genind`, `genpop`, `genlight`, `vcfR` | [`as_popcounts()`](https://paulmaier.github.io/corridoR/reference/as_popcounts.md) | from adegenet or vcfR |
 
-Precomputed matrices of FST or dM from any other software work too.
+Precomputed matrices of F_(ST) or δM from any other software work too.
 
 ## Citation
 
@@ -94,8 +94,9 @@ If you use corridoR, **please cite both papers**:
 > induce upward range shifts via asymmetrical migration corridors.
 > *Heredity* 129:257-272. <https://doi.org/10.1038/s41437-022-00561-x>
 
-> Maier PA (2027) corridoR: an R package for forecasting genetic range
-> shifts along migration corridors. Manuscript in preparation.
+> Maier PA (2027) corridoR: An R package for forecasting genetic range
+> shifts along migration corridors. *Methods in Ecology and Evolution*,
+> in review.
 
 The first introduced the method; the second describes the package.
 `citation("corridoR")` prints both.

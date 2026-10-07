@@ -83,8 +83,8 @@ east and two canyons. Migrants favor wetter meadows, and warming dries
 the foothills the most.</p>
 <p><strong>1. Genetic distances.</strong> Read genotypes (STRUCTURE,
 GENEPOP, VCF, GenAlEx, FSTAT, PLINK, or <code>adegenet</code> and
-<code>vcfR</code> objects), then compute FST and dM, the net direction
-of migration:</p>
+<code>vcfR</code> objects), then compute F<sub>ST</sub> and δM, the net
+direction of migration:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_genotypes.html">read_genotypes</a></span><span class="op">(</span><span class="va">ex</span><span class="op">$</span><span class="va">files</span><span class="op">$</span><span class="va">structure</span><span class="op">)</span></span>
 <span><span class="va">fst</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pairwise_fst.html">pairwise_fst</a></span><span class="op">(</span><span class="va">pc</span><span class="op">)</span></span>
@@ -109,7 +109,7 @@ route through each cell is:</p>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/corridor_extract.html">corridor_extract</a></span><span class="op">(</span><span class="va">both</span>, <span class="va">pairs</span>, acc <span class="op">=</span> <span class="va">ex</span><span class="op">$</span><span class="va">acc</span>, q <span class="op">=</span> <span class="fl">0.05</span>, progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><strong>4 and 5. Models.</strong> Each pair is used in both
 directions, with the contrast between source and destination meadows and
-the lineage effect added. Then a Cubist model of dM:</p>
+the lineage effect added. Then a Cubist model of δM:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">ex</span><span class="op">$</span><span class="va">env</span><span class="op">)</span></span>
 <span><span class="va">now</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/both_directions.html">both_directions</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"from"</span>, <span class="st">"to"</span>, <span class="va">vars</span><span class="op">)</span><span class="op">]</span>, path_length <span class="op">=</span> <span class="va">paths</span><span class="op">$</span><span class="va">length</span><span class="op">)</span><span class="op">)</span></span>
@@ -147,8 +147,9 @@ nearby pairs this version is coarser than the full tutorial.</p>
 Landscape genetics of a sub-alpine toad: climate change predicted to
 induce upward range shifts via asymmetrical migration corridors.
 <em>Heredity</em> 129:257-272. <a href="https://doi.org/10.1038/s41437-022-00561-x" class="external-link uri">https://doi.org/10.1038/s41437-022-00561-x</a></p>
-<p>Maier PA (2027) corridoR: an R package for forecasting genetic range
-shifts along migration corridors. Manuscript in preparation.</p>
+<p>Maier PA (2027) corridoR: An R package for forecasting genetic range
+shifts along migration corridors. <em>Methods in Ecology and
+Evolution</em>, in review.</p>
 </div>
   </main>
 </div>

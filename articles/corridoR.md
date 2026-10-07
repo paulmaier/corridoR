@@ -23,7 +23,7 @@ foothills the most.
 
 **1. Genetic distances.** Read genotypes (STRUCTURE, GENEPOP, VCF,
 GenAlEx, FSTAT, PLINK, or `adegenet` and `vcfR` objects), then compute
-FST and dM, the net direction of migration:
+F_(ST) and δM, the net direction of migration:
 
 ``` r
 
@@ -59,7 +59,7 @@ x <- corridor_extract(both, pairs, acc = ex$acc, q = 0.05, progress = FALSE)
 
 **4 and 5. Models.** Each pair is used in both directions, with the
 contrast between source and destination meadows and the lineage effect
-added. Then a Cubist model of dM:
+added. Then a Cubist model of δM:
 
 ``` r
 
@@ -108,5 +108,6 @@ Landscape genetics of a sub-alpine toad: climate change predicted to
 induce upward range shifts via asymmetrical migration corridors.
 *Heredity* 129:257-272. <https://doi.org/10.1038/s41437-022-00561-x>
 
-Maier PA (2027) corridoR: an R package for forecasting genetic range
-shifts along migration corridors. Manuscript in preparation.
+Maier PA (2027) corridoR: An R package for forecasting genetic range
+shifts along migration corridors. *Methods in Ecology and Evolution*, in
+review.

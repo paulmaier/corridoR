@@ -151,11 +151,12 @@ formats:</p>
 <span><span class="va">pc_vcf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_genotypes.html">read_genotypes</a></span><span class="op">(</span><span class="va">ex</span><span class="op">$</span><span class="va">files</span><span class="op">$</span><span class="va">vcf</span>, pop <span class="op">=</span> <span class="va">ex</span><span class="op">$</span><span class="va">files</span><span class="op">$</span><span class="va">popmap</span><span class="op">)</span>   <span class="co"># VCF needs a population map</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu"><a href="../reference/pairwise_fst.html">pairwise_fst</a></span><span class="op">(</span><span class="va">pc</span><span class="op">)</span>, <span class="fu"><a href="../reference/pairwise_fst.html">pairwise_fst</a></span><span class="op">(</span><span class="va">pc_vcf</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
-<p>Pairwise FST measures differentiation. Directional GST (Sundqvist et
-al. 2016, as in <code>diveRsity::divMigrate</code>) estimates relative
-migration in each direction from a hypothetical gene pool shared by each
-pair; the difference, emigration minus immigration, is dM. Positive dM
-means the source sends more migrants than it receives.</p>
+<p>Pairwise F<sub>ST</sub> measures differentiation. Directional
+G<sub>ST</sub> (Sundqvist et al. 2016, as in
+<code>diveRsity::divMigrate</code>) estimates relative migration in each
+direction from a hypothetical gene pool shared by each pair; the
+difference, emigration minus immigration, is δM. Positive δM means the
+source sends more migrants than it receives.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fst</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pairwise_fst.html">pairwise_fst</a></span><span class="op">(</span><span class="va">pc</span><span class="op">)</span></span>
 <span><span class="va">dg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/directional_gst.html">directional_gst</a></span><span class="op">(</span><span class="va">pc</span><span class="op">)</span></span>
@@ -205,9 +206,9 @@ example includes both components, so we can do the same.</p>
 <p><code><a href="../reference/rank_resistance.html">rank_resistance()</a></code> finds the cost of the cheapest route
 between each pair of meadows through every surface (ridgelines and
 canyon walls at resistance 1e6 cannot be crossed) and ranks the surfaces
-by a mixed model of FST on that distance, with source and destination
-meadow as random effects. Straight-line distance is added as a
-baseline.</p>
+by a mixed model of F<sub>ST</sub> on that distance, with source and
+destination meadow as random effects. Straight-line distance is added as
+a baseline.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rank</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rank_resistance.html">rank_resistance</a></span><span class="op">(</span><span class="va">surfaces</span>, <span class="va">ex</span><span class="op">$</span><span class="va">sites</span>, <span class="va">fst</span>, pairs <span class="op">=</span> <span class="va">pairs</span><span class="op">)</span></span>
 <span><span class="va">rank</span></span>
@@ -276,8 +277,8 @@ buffer and two corridor widths.</p>
 </h2>
 <p>Climate may act over a broad swath of landscape, while slope matters
 right along the route. <code><a href="../reference/select_bandwidth.html">select_bandwidth()</a></code> fits a random
-forest of FST on each feature group under each bandwidth and keeps the
-one with the lowest cross-validated error.</p>
+forest of F<sub>ST</sub> on each feature group under each bandwidth and
+keeps the one with the lowest cross-validated error.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">groups</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>climate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"snowpack"</span>, <span class="st">"runoff"</span>, <span class="st">"summer_temp"</span><span class="op">)</span>, wetness <span class="op">=</span> <span class="st">"moisture"</span>,</span>
 <span>               terrain <span class="op">=</span> <span class="st">"slope"</span>, cover <span class="op">=</span> <span class="st">"forest"</span><span class="op">)</span></span>
@@ -302,7 +303,7 @@ one with the lowest cross-validated error.</p>
 <span><span class="co">#&gt; "lcp_400m" "lcc_0.05" "lcc_0.05" "lcp_400m"</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="step-5--models-of-fst-and-dm">Step 5. Models of FST and dM<a class="anchor" aria-label="anchor" href="#step-5--models-of-fst-and-dm"></a>
+<h2 id="step-5--models-of-fst-and-δm">Step 5. Models of F<sub>ST</sub> and δM<a class="anchor" aria-label="anchor" href="#step-5--models-of-fst-and-%CE%B4m"></a>
 </h2>
 <p>The model data hold one row per <em>directed</em> pair. Corridor
 features are the same in both directions, so
@@ -349,8 +350,9 @@ features by importance, and refits.</p>
 <p><img src="tutorial_files/figure-html/fit-1.png" class="r-plt" alt="" width="100%"></p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">op</span><span class="op">)</span></span></code></pre></div>
-<p>FST is explained mostly by corridor features and path length, dM
-mostly by contrasts between meadows, as in the Yosemite toad:</p>
+<p>F<sub>ST</sub> is explained mostly by corridor features and path
+length, δM mostly by contrasts between meadows, as in the Yosemite
+toad:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">op</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">9</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/flip.html" class="external-link">rev</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">m_fst</span><span class="op">$</span><span class="va">importance</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span>, horiz <span class="op">=</span> <span class="cn">TRUE</span>, las <span class="op">=</span> <span class="fl">1</span>, cex.names <span class="op">=</span> <span class="fl">0.75</span>,</span>
@@ -379,7 +381,7 @@ PCA loadings and predicts each pair now and under warming.</p>
 <span><span class="co">#&gt;  3rd Qu.: 0.054055   3rd Qu.: 0.0455147  </span></span>
 <span><span class="co">#&gt;  Max.   : 0.216369   Max.   : 0.4056813</span></span></code></pre></div>
 <p><code><a href="../reference/map_pairwise.html">map_pairwise()</a></code> spreads each pair’s change over its
-corridor and averages overlapping corridors. For dM it also sums
+corridor and averages overlapping corridors. For δM it also sums
 direction vectors, each pointing from source to destination and weighted
 by the size of the change, to give a net direction in every cell.
 <code><a href="../reference/plot_shift.html">plot_shift()</a></code> draws the result: blue where change is small,
@@ -396,10 +398,10 @@ refuge. East of the crest the arrows turn and climb back west up the
 escarpment. The canyons stand out as gaps that corridors cannot cross.
 This is the pattern built into the simulation, recovered from genotypes
 and landscape data.</p>
-<p>The FST model maps present-day connectivity the same way. Scaling
-predicted FST so that 1 is the best-connected pair, and averaging over
-corridors, shows corridors of high flow and the pinch points between
-them:</p>
+<p>The F<sub>ST</sub> model maps present-day connectivity the same way.
+Scaling predicted F<sub>ST</sub> so that 1 is the best-connected pair,
+and averaging over corridors, shows corridors of high flow and the pinch
+points between them:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fst_now</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">m_fst</span>, <span class="va">now</span><span class="op">)</span></span>
 <span><span class="va">conn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>from <span class="op">=</span> <span class="va">now</span><span class="op">$</span><span class="va">from</span>, to <span class="op">=</span> <span class="va">now</span><span class="op">$</span><span class="va">to</span>, value <span class="op">=</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">fst_now</span><span class="op">)</span> <span class="op">-</span> <span class="va">fst_now</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">fst_now</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -417,7 +419,7 @@ them:</p>
 <ul>
 <li>
 <strong>Genotypes:</strong> any format <code><a href="../reference/read_genotypes.html">read_genotypes()</a></code>
-reads, or matrices of FST and dM from other software.</li>
+reads, or matrices of F<sub>ST</sub> and δM from other software.</li>
 <li>
 <strong>Sites:</strong> an <code>sf</code> layer of points or
 polygons whose ID column matches the population names.</li>
@@ -446,8 +448,9 @@ need time rather than memory.</li>
 Landscape genetics of a sub-alpine toad: climate change predicted to
 induce upward range shifts via asymmetrical migration corridors.
 <em>Heredity</em> 129:257-272. <a href="https://doi.org/10.1038/s41437-022-00561-x" class="external-link uri">https://doi.org/10.1038/s41437-022-00561-x</a></p>
-<p>Maier PA (2027) corridoR: an R package for forecasting genetic range
-shifts along migration corridors. Manuscript in preparation.</p>
+<p>Maier PA (2027) corridoR: An R package for forecasting genetic range
+shifts along migration corridors. <em>Methods in Ecology and
+Evolution</em>, in review.</p>
 </div>
 <div class="section level2">
 <h2 id="other-references">Other references<a class="anchor" aria-label="anchor" href="#other-references"></a>

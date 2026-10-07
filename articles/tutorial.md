@@ -102,10 +102,10 @@ all.equal(pairwise_fst(pc), pairwise_fst(pc_vcf))
 #> [1] TRUE
 ```
 
-Pairwise FST measures differentiation. Directional GST (Sundqvist et al.
-2016, as in `diveRsity::divMigrate`) estimates relative migration in
-each direction from a hypothetical gene pool shared by each pair; the
-difference, emigration minus immigration, is dM. Positive dM means the
+Pairwise F_(ST) measures differentiation. Directional G_(ST) (Sundqvist
+et al. 2016, as in `diveRsity::divMigrate`) estimates relative migration
+in each direction from a hypothetical gene pool shared by each pair; the
+difference, emigration minus immigration, is δM. Positive δM means the
 source sends more migrants than it receives.
 
 ``` r
@@ -170,7 +170,7 @@ surfaces <- setNames(lapply(weights, blend), paste0("slope_", weights))
 [`rank_resistance()`](https://paulmaier.github.io/corridoR/reference/rank_resistance.md)
 finds the cost of the cheapest route between each pair of meadows
 through every surface (ridgelines and canyon walls at resistance 1e6
-cannot be crossed) and ranks the surfaces by a mixed model of FST on
+cannot be crossed) and ranks the surfaces by a mixed model of F_(ST) on
 that distance, with source and destination meadow as random effects.
 Straight-line distance is added as a baseline.
 
@@ -256,8 +256,8 @@ head(bands$lcc_0.05[, 1:6])
 Climate may act over a broad swath of landscape, while slope matters
 right along the route.
 [`select_bandwidth()`](https://paulmaier.github.io/corridoR/reference/select_bandwidth.md)
-fits a random forest of FST on each feature group under each bandwidth
-and keeps the one with the lowest cross-validated error.
+fits a random forest of F_(ST) on each feature group under each
+bandwidth and keeps the one with the lowest cross-validated error.
 
 ``` r
 
@@ -284,7 +284,7 @@ best
 #> "lcp_400m" "lcc_0.05" "lcc_0.05" "lcp_400m"
 ```
 
-## Step 5. Models of FST and dM
+## Step 5. Models of F_(ST) and δM
 
 The model data hold one row per *directed* pair. Corridor features are
 the same in both directions, so
@@ -348,8 +348,8 @@ plot(m_dm$observed, m_dm$cv_pred, pch = 16, col = "#2a7f9e44", xlab = "Observed 
 par(op)
 ```
 
-FST is explained mostly by corridor features and path length, dM mostly
-by contrasts between meadows, as in the Yosemite toad:
+F_(ST) is explained mostly by corridor features and path length, δM
+mostly by contrasts between meadows, as in the Yosemite toad:
 
 ``` r
 
@@ -390,7 +390,7 @@ summary(change[, c("fst", "dM")])
 
 [`map_pairwise()`](https://paulmaier.github.io/corridoR/reference/map_pairwise.md)
 spreads each pair’s change over its corridor and averages overlapping
-corridors. For dM it also sums direction vectors, each pointing from
+corridors. For δM it also sums direction vectors, each pointing from
 source to destination and weighted by the size of the change, to give a
 net direction in every cell.
 [`plot_shift()`](https://paulmaier.github.io/corridoR/reference/plot_shift.md)
@@ -413,10 +413,10 @@ The canyons stand out as gaps that corridors cannot cross. This is the
 pattern built into the simulation, recovered from genotypes and
 landscape data.
 
-The FST model maps present-day connectivity the same way. Scaling
-predicted FST so that 1 is the best-connected pair, and averaging over
-corridors, shows corridors of high flow and the pinch points between
-them:
+The F_(ST) model maps present-day connectivity the same way. Scaling
+predicted F_(ST) so that 1 is the best-connected pair, and averaging
+over corridors, shows corridors of high flow and the pinch points
+between them:
 
 ``` r
 
@@ -436,7 +436,7 @@ plot(st_geometry(ex$sites), pch = 21, bg = lc[ex$sites$lineage], col = "white", 
 
 - **Genotypes:** any format
   [`read_genotypes()`](https://paulmaier.github.io/corridoR/reference/read_genotypes.md)
-  reads, or matrices of FST and dM from other software.
+  reads, or matrices of F_(ST) and δM from other software.
 - **Sites:** an `sf` layer of points or polygons whose ID column matches
   the population names.
 - **Resistance:** a raster per hypothesis, built by hand from layers
@@ -462,8 +462,9 @@ Landscape genetics of a sub-alpine toad: climate change predicted to
 induce upward range shifts via asymmetrical migration corridors.
 *Heredity* 129:257-272. <https://doi.org/10.1038/s41437-022-00561-x>
 
-Maier PA (2027) corridoR: an R package for forecasting genetic range
-shifts along migration corridors. Manuscript in preparation.
+Maier PA (2027) corridoR: An R package for forecasting genetic range
+shifts along migration corridors. *Methods in Ecology and Evolution*, in
+review.
 
 ## Other references
 

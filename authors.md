@@ -25,12 +25,13 @@ Heredity 129:257-272. https://doi.org/10.1038/s41437-022-00561-x
       doi = {10.1038/s41437-022-00561-x},
     }
 
-Maier PA (2027) corridoR: an R package for forecasting genetic range
-shifts along migration corridors. Manuscript in preparation.
+Maier PA (2027) corridoR: An R package for forecasting genetic range
+shifts along migration corridors. Methods in Ecology and Evolution, in
+review.
 
     @Unpublished{,
-      title = {corridoR: an R package for forecasting genetic range shifts along migration corridors},
+      title = {corridoR: An R package for forecasting genetic range shifts along migration corridors},
       author = {Paul A. Maier},
       year = {2027},
-      note = {Manuscript in preparation. The journal, volume, pages and DOI will be added here on publication.},
+      note = {Methods in Ecology and Evolution, in review. The volume, pages and DOI will be added here on publication.},
     }
