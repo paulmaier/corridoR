@@ -13,7 +13,7 @@ which predicted upslope range shifts in the Yosemite toad:
 
 1. **Genetic distances.** Read genotypes from STRUCTURE, GENEPOP, VCF, GenAlEx,
    FSTAT or PLINK files (or `adegenet` and `vcfR` objects), then compute
-   pairwise FST and directional differentiation (dM, the net direction of
+   pairwise F<sub>ST</sub> and directional differentiation (δM, the net direction of
    migration).
 2. **Least cost corridors.** Widen least cost paths into corridors whose cells
    are weighted by how likely a route through them is.
@@ -21,7 +21,7 @@ which predicted upslope range shifts in the Yosemite toad:
    plus the contrast between source and destination sites.
 4. **A bandwidth for each feature group.** Let climate act over a broad corridor
    and soil over a narrow one, chosen by cross-validation.
-5. **Cubist models** of FST and dM, which extrapolate to future climate better
+5. **Cubist models** of F<sub>ST</sub> and δM, which extrapolate to future climate better
    than random forests.
 6. **Maps** of projected change, with arrows showing the net direction of
    migration.
@@ -72,7 +72,7 @@ is a short version. The same analysis on real data is in the
 | PLINK (`.ped`/`.map`, `.raw`) | `read_genotypes()` | convert `.bed` with `plink --recode A` |
 | `genind`, `genpop`, `genlight`, `vcfR` | `as_popcounts()` | from adegenet or vcfR |
 
-Precomputed matrices of FST or dM from any other software work too.
+Precomputed matrices of F<sub>ST</sub> or δM from any other software work too.
 
 ## Citation
 
@@ -83,8 +83,8 @@ If you use corridoR, **please cite both papers**:
 > range shifts via asymmetrical migration corridors. *Heredity* 129:257-272.
 > <https://doi.org/10.1038/s41437-022-00561-x>
 
-> Maier PA (2027) corridoR: an R package for forecasting genetic range shifts
-> along migration corridors. Manuscript in preparation.
+> Maier PA (2027) corridoR: An R package for forecasting genetic range shifts
+> along migration corridors. *Methods in Ecology and Evolution*, in review.
 
 The first introduced the method; the second describes the package.
 `citation("corridoR")` prints both.

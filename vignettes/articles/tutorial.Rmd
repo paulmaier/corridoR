@@ -110,10 +110,10 @@ pc_vcf <- read_genotypes(ex$files$vcf, pop = ex$files$popmap)   # VCF needs a po
 all.equal(pairwise_fst(pc), pairwise_fst(pc_vcf))
 ```
 
-Pairwise FST measures differentiation. Directional GST (Sundqvist et al.
+Pairwise F<sub>ST</sub> measures differentiation. Directional G<sub>ST</sub> (Sundqvist et al.
 2016, as in `diveRsity::divMigrate`) estimates relative migration in each
 direction from a hypothetical gene pool shared by each pair; the difference,
-emigration minus immigration, is dM. Positive dM means the source sends more
+emigration minus immigration, is δM. Positive δM means the source sends more
 migrants than it receives.
 
 ```{r genetics}
@@ -160,7 +160,7 @@ surfaces <- setNames(lapply(weights, blend), paste0("slope_", weights))
 
 `rank_resistance()` finds the cost of the cheapest route between each pair of
 meadows through every surface (ridgelines and canyon walls at resistance 1e6
-cannot be crossed) and ranks the surfaces by a mixed model of FST on that
+cannot be crossed) and ranks the surfaces by a mixed model of F<sub>ST</sub> on that
 distance, with source and destination meadow as random effects. Straight-line
 distance is added as a baseline.
 
@@ -218,7 +218,7 @@ head(bands$lcc_0.05[, 1:6])
 ## Step 4. A bandwidth for each group of features
 
 Climate may act over a broad swath of landscape, while slope matters right
-along the route. `select_bandwidth()` fits a random forest of FST on each
+along the route. `select_bandwidth()` fits a random forest of F<sub>ST</sub> on each
 feature group under each bandwidth and keeps the one with the lowest
 cross-validated error.
 
@@ -231,7 +231,7 @@ best <- attr(sel, "best")
 best
 ```
 
-## Step 5. Models of FST and dM
+## Step 5. Models of F<sub>ST</sub> and δM
 
 The model data hold one row per *directed* pair. Corridor features are the
 same in both directions, so `both_directions()` repeats them. `site_contrast()`
@@ -275,7 +275,7 @@ plot(m_dm$observed, m_dm$cv_pred, pch = 16, col = "#2a7f9e44", xlab = "Observed 
 par(op)
 ```
 
-FST is explained mostly by corridor features and path length, dM mostly by
+F<sub>ST</sub> is explained mostly by corridor features and path length, δM mostly by
 contrasts between meadows, as in the Yosemite toad:
 
 ```{r importance, fig.height = 4}
@@ -300,7 +300,7 @@ summary(change[, c("fst", "dM")])
 ```
 
 `map_pairwise()` spreads each pair's change over its corridor and averages
-overlapping corridors. For dM it also sums direction vectors, each pointing
+overlapping corridors. For δM it also sums direction vectors, each pointing
 from source to destination and weighted by the size of the change, to give a
 net direction in every cell. `plot_shift()` draws the result: blue where change
 is small, red where it is large.
@@ -318,8 +318,8 @@ the arrows turn and climb back west up the escarpment. The canyons stand out as
 gaps that corridors cannot cross. This is the pattern built into the
 simulation, recovered from genotypes and landscape data.
 
-The FST model maps present-day connectivity the same way. Scaling predicted
-FST so that 1 is the best-connected pair, and averaging over corridors, shows
+The F<sub>ST</sub> model maps present-day connectivity the same way. Scaling predicted
+F<sub>ST</sub> so that 1 is the best-connected pair, and averaging over corridors, shows
 corridors of high flow and the pinch points between them:
 
 ```{r map-conn, fig.height = 6}
@@ -335,8 +335,8 @@ plot(st_geometry(ex$sites), pch = 21, bg = lc[ex$sites$lineage], col = "white", 
 
 ## Using your own data
 
-* **Genotypes:** any format `read_genotypes()` reads, or matrices of FST and
-  dM from other software.
+* **Genotypes:** any format `read_genotypes()` reads, or matrices of F<sub>ST</sub> and
+  δM from other software.
 * **Sites:** an `sf` layer of points or polygons whose ID column matches the
   population names.
 * **Resistance:** a raster per hypothesis, built by hand from layers such as
@@ -358,8 +358,8 @@ genetics of a sub-alpine toad: climate change predicted to induce upward range
 shifts via asymmetrical migration corridors. *Heredity* 129:257-272.
 <https://doi.org/10.1038/s41437-022-00561-x>
 
-Maier PA (2027) corridoR: an R package for forecasting genetic range shifts
-along migration corridors. Manuscript in preparation.
+Maier PA (2027) corridoR: An R package for forecasting genetic range shifts
+along migration corridors. *Methods in Ecology and Evolution*, in review.
 
 ## Other references
 
