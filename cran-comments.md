@@ -2,19 +2,18 @@
 
 This is a resubmission. In this version I have:
 
-* Put software and file-format names in the Description in single quotes,
-  and replaced "FST" with "fixation indices".
-* Wrapped the `corridor_extract()` example, which took more than 5 s on
-  Debian, in `\donttest{}`.
+* Reworded the Description so it no longer starts with "Tools for".
+* Removed the single quotes around file-format names (STRUCTURE, GENEPOP,
+  VCF, GenAlEx, FSTAT, PLINK); only the package name 'adegenet' is quoted.
 
-The remaining spelling NOTE flags author names in references ("Maier et
-al.", "Sundqvist et al."); these are correct.
+The version is 0.2.0 because the package also gained a function since the
+first submission (`rank_resistance()`, which compares candidate resistance
+surfaces).
 
 ## Test environments
 
 * local macOS (aarch64), R 4.5.3
 * GitHub Actions: macOS (release), Windows (release), Ubuntu (devel, release, oldrel-1)
-* win-builder and Debian incoming pre-tests (previous submission)
 
 ## R CMD check results
 

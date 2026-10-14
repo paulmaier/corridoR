@@ -1,21 +1,20 @@
 Package: corridoR
 Title: Migration Corridors and Genetic Range Shifts from Landscape Genetic Data
-Version: 0.1.0.9000
+Version: 0.2.0
 Authors@R: 
     person("Paul A.", "Maier", , "maierpa@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0003-0851-8827"))
-Description: Tools for modeling genetic connectivity along migration
-    corridors and forecasting how it shifts under climate change, following
-    Maier et al. (2022) <doi:10.1038/s41437-022-00561-x>. Least cost
-    corridors are built from accumulated cost surfaces and used as weights to
-    summarize raw environmental layers between sites; each group of
-    environmental features can choose its own corridor bandwidth; and
-    pairwise predictions of differentiation and directional migration are
-    mapped back onto the landscape as magnitude and net-direction surfaces.
-    Includes readers for common genotype formats ('STRUCTURE', 'GENEPOP',
-    'VCF', 'GenAlEx', 'FSTAT', 'PLINK', and 'adegenet' objects), pairwise
-    fixation indices, and the directional differentiation of Sundqvist et al.
-    (2016)
+Description: Models genetic connectivity along migration corridors and
+    forecasts how it shifts under climate change, following Maier et al.
+    (2022) <doi:10.1038/s41437-022-00561-x>. Least cost corridors are built
+    from accumulated cost surfaces and used as weights to summarize raw
+    environmental layers between sites; each group of environmental features
+    can choose its own corridor bandwidth; and pairwise predictions of
+    differentiation and directional migration are mapped back onto the
+    landscape as magnitude and net-direction surfaces. Includes readers for
+    common genotype formats (STRUCTURE, GENEPOP, VCF, GenAlEx, FSTAT and
+    PLINK files, and 'adegenet' objects), pairwise fixation indices, and the
+    directional differentiation of Sundqvist et al. (2016)
     <doi:10.1002/ece3.2096>.
 License: MIT + file LICENSE
 URL: https://github.com/paulmaier/corridoR, https://paulmaier.github.io/corridoR/
