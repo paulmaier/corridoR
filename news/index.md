@@ -1,6 +1,9 @@
 # Changelog
 
-## corridoR (development version)
+## corridoR 0.2.0
+
+- The package description no longer starts with “Tools for”, and file
+  formats are no longer quoted (CRAN request).
 
 - The example data no longer raise warnings with older GDAL and PROJ
   libraries: the sites are stored as GeoPackage 1.2, and the example
